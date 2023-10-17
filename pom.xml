@@ -5,16 +5,16 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.16</version>
+		<version>3.1.4</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>br.com.postech.arquitetura.software</groupId>
+	<groupId>br.com.postech.software.architecture</groupId>
 	<artifactId>tech-challenge-pos-tech</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>tech-challenge-pos-tech</name>
 	<description>Tech Change - Pos Tech de Arquitetura de Software</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<dependency>

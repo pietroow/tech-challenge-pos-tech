@@ -1,0 +1,13 @@
+package br.com.postech.software.architecture.techchallenge.service;
+
+import java.util.List;
+
+import br.com.postech.software.architecture.techchallenge.model.Cliente;
+
+public interface IClientService{
+
+	List<Cliente> findAll();
+	
+	Cliente findById(Integer id);
+	
+}
