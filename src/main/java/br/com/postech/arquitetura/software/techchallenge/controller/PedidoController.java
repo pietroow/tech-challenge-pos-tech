@@ -22,7 +22,7 @@ public class PedidoController {
 	private IPedidoService pedidoService;
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON)
-    public ResponseEntity<List<Pedido>> listarleiloes(){
+    public ResponseEntity<List<Pedido>> listarPedidos(){
         return new ResponseEntity<>(pedidoService.findAll(), HttpStatus.OK );
     }
 }

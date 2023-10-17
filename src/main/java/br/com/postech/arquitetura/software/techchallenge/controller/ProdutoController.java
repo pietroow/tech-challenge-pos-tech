@@ -20,7 +20,7 @@ public class ProdutoController {
 	private IProdutoService produtoService;
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON)
-    public ResponseEntity<List<Produto>> listarleiloes(){
+    public ResponseEntity<List<Produto>> listarProdutos(){
         return new ResponseEntity<>(produtoService.findAll(), HttpStatus.OK );
     }
 }

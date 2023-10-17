@@ -22,7 +22,7 @@ public class ClienteController {
 	private IClientService clienteService;
 	
     @GetMapping(produces=MediaType.APPLICATION_JSON)
-    public ResponseEntity<List<Cliente>> listarleiloes(){
+    public ResponseEntity<List<Cliente>> listarClientes(){
         return new ResponseEntity<>(clienteService.findAll(), HttpStatus.OK );
     }
 }
