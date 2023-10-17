@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import br.com.postech.arquitetura.software.techchallenge.model.Cliente;
 import br.com.postech.arquitetura.software.techchallenge.repository.jpa.IClienteJpaRepository;
 import br.com.postech.arquitetura.software.techchallenge.service.IClientService;
+import br.com.postech.arquitetura.software.techchallenge.util.ValidacaoUtils;
 
 @Service
 public class ClienteServiceImpl implements IClientService {
@@ -21,16 +22,18 @@ public class ClienteServiceImpl implements IClientService {
 		this.clienteJpaRepository = clienteJpaRepository;
 	}
 	
-	protected IClienteJpaRepository getRepository() {
+	protected IClienteJpaRepository getPersistencia() {
 		return clienteJpaRepository;
 	}
 
+	@Override
 	public List<Cliente> findAll() {
-		return getRepository().findAll();
+		return getPersistencia().findAll();
 	}
 
-	public Optional<Cliente> findById(Integer id) {
-		return getRepository().findById(id);
+	@Override
+	public Cliente findById(Integer id) {
+		Optional<Cliente> clientes = getPersistencia().findById(id);
+		return ValidacaoUtils.isPreenchido(clientes) ? clientes.get() : new Cliente();
 	}
-
 }

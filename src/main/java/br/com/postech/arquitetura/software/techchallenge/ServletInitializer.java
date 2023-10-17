@@ -1,7 +1,7 @@
 package br.com.postech.arquitetura.software.techchallenge;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
+//import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
@@ -15,14 +15,14 @@ import br.com.postech.arquitetura.software.techchallenge.configuration.Parameter
 
 @Controller
 @EnableAutoConfiguration
-@EntityScan(basePackages = { ParameterConfig.PACKAGE_MODEL })
-@EnableJpaRepositories(basePackages = { ParameterConfig.PACKAGE_REPOSITORY })
+//@EntityScan(basePackages = { ParameterConfig.PACKAGE_MODEL })
+@EnableJpaRepositories(basePackages = { ParameterConfig.PACKAGE_REPOSITORY_JPA })
 @ComponentScan(basePackages = {ParameterConfig.PACKAGE_CONTROLLERS,
-							   ParameterConfig.PACKAGE_SECURITY,
 							   ParameterConfig.PACKAGE_CONFIGURATION,
 							   ParameterConfig.PACKAGE_SERVICE,
-							   ParameterConfig.PACKAGE_VALIDATION,
 							   ParameterConfig.PACKAGE_REPOSITORY_JDBC})
+//							   ParameterConfig.PACKAGE_SECURITY,
+//							   ParameterConfig.PACKAGE_VALIDATION,
 public class ServletInitializer extends SpringBootServletInitializer {
 
 	

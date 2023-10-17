@@ -4,7 +4,7 @@ public class ParameterConfig {
 
 	public static final String PACKAGE_GENERAL                  =   "br.com.postech.arquitetura.software.techchallenge";
 	public static final String PACKAGE_REPOSITORY_JDBC			=	"br.com.postech.arquitetura.software.techchallenge.repository.jdbc";
-	public static final String PACKAGE_REPOSITORY				=	"br.com.postech.arquitetura.software.techchallenge.repository";
+	public static final String PACKAGE_REPOSITORY_JPA			=	"br.com.postech.arquitetura.software.techchallenge.repository.jpa";
 	public static final String PACKAGE_SERVICE					= 	"br.com.postech.arquitetura.software.techchallenge.service";
 	public static final String PACKAGE_VALIDATION				= 	"br.com.postech.arquitetura.software.techchallenge.validation";
 	public static final String PACKAGE_CONTROLLERS              =   "br.com.postech.arquitetura.software.techchallenge.controller";

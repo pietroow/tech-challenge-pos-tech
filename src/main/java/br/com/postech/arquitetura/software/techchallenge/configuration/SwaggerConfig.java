@@ -1,8 +1,6 @@
 package br.com.postech.arquitetura.software.techchallenge.configuration;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -19,9 +17,6 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.GrantType;
-import springfox.documentation.service.OAuth;
-import springfox.documentation.service.ResourceOwnerPasswordCredentialsGrant;
 import springfox.documentation.service.SecurityReference;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -49,7 +44,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 					.apis(RequestHandlerSelectors.basePackage(ParameterConfig.PACKAGE_CONTROLLERS))
 						.paths(PathSelectors.any()).build()
 				.ignoredParameterTypes(Principal.class)
-				.securitySchemes(Collections.singletonList(securitySchema()))
+//				.securitySchemes(Collections.singletonList(securitySchema()))
 				.securityContexts(Collections.singletonList(securityContext()))
 				.apiInfo(apiInfo());
 	}
@@ -71,14 +66,14 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 	        .build();
 	}
 
-	private OAuth securitySchema() {        
-        List<GrantType> grantTypes = new ArrayList<GrantType>();
-        GrantType creGrant = new ResourceOwnerPasswordCredentialsGrant(AUTH_SERVER);
-
-        grantTypes.add(creGrant);
-
-        return new OAuth(Constantes.SERVER_NAME, Arrays.asList(scopes()), grantTypes);
-    }
+//	private OAuth securitySchema() {        
+//        List<GrantType> grantTypes = new ArrayList<GrantType>();
+//        GrantType creGrant = new ResourceOwnerPasswordCredentialsGrant(AUTH_SERVER);
+//
+//        grantTypes.add(creGrant);
+//
+//        return new OAuth(Constantes.SERVER_NAME, Arrays.asList(scopes()), grantTypes);
+//    }
 
 	private AuthorizationScope[] scopes() {
 	    AuthorizationScope[] scopes = { 

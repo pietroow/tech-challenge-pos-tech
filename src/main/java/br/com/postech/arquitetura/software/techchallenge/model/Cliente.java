@@ -1,5 +1,8 @@
 package br.com.postech.arquitetura.software.techchallenge.model;
 
-public class Cliente {
+import java.io.Serializable;
+
+public class Cliente implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 }
