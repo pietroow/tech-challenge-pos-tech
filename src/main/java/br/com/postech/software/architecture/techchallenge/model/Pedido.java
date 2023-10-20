@@ -1,47 +1,29 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
+import jakarta.persistence.*;
+import lombok.Getter;
+
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Entity
+@Table(name = "pedido")
+@Getter
 public class Pedido implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	private Long id; 
-	private Cliente cliente;	
-	private List<Produto> produtos;
-	
-	public Pedido() {
-		super();
-	}
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-	public Pedido(Long id, Cliente cliente, List<Produto> produtos) {
-		super();
-		this.id = id;
-		this.cliente = cliente;
-		this.produtos = produtos;
-	}
+	@Column(columnDefinition = "JSONB", nullable = false)
+	private String produtos;
 
-	public Long getId() {
-		return id;
-	}
+	@ManyToOne
+	@JoinColumn(name = "cliente_id")
+	private Cliente cliente;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	public List<Produto> getProdutos() {
-		return produtos;
-	}
-
-	public void setProdutos(List<Produto> produtos) {
-		this.produtos = produtos;
-	} 
+	@Column(name = "data_pedido", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+	private LocalDateTime dataPedido;
 }

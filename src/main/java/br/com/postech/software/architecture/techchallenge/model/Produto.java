@@ -4,40 +4,22 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import br.com.postech.software.architecture.techchallenge.enums.Categoria;
+import jakarta.persistence.*;
+import lombok.Getter;
 
+@Entity
+@Table(name = "produto")
+@Getter
 public class Produto implements Serializable{
 	private static final long serialVersionUID = 1L;
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nome; 
-	private Categoria categoria; 
+
+	@Column(nullable = false, length = 100)
+	private String nome;
+
+	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal valor;
-	
-	public Produto() {
-		super();
-	}
-
-	public Produto(Long id, String nome, Categoria categoria, BigDecimal valor) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.categoria = categoria;
-		this.valor = valor;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public BigDecimal getValor() {
-		return valor;
-	}
 }

@@ -1,6 +1,7 @@
 package br.com.postech.software.architecture.techchallenge.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -24,7 +25,7 @@ public class ClienteServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Cliente findById(Integer id) {
+	public Optional<Cliente> findById(Integer id) {
 		return getPersistencia().findById(id);
 	}
 }
