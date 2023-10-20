@@ -21,12 +21,12 @@ public class PedidoServiceImpl implements IPedidoService {
 
 	@Override
 	public List<Pedido> findAll() {
-		return getPersistencia().findAll();
+		return null; //getPersistencia().findAll();
 	}
 
 	@Override
 	public Pedido findById(Integer id) {
-		Optional<Pedido> pedido = getPersistencia().findById(id);
+		Optional<Pedido> pedido = null;//getPersistencia().findById(id);
 		return ValidacaoUtils.isPreenchido(pedido) ? pedido.get() : new Pedido();
 	}
 }
