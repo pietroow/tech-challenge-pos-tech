@@ -25,6 +25,6 @@ public class ClienteServiceImpl implements IClientService {
 
 	@Override
 	public Cliente findById(Integer id) {
-		return getPersistencia().findById(id);
+		return getPersistencia().findById(id).orElseThrow();
 	}
 }
