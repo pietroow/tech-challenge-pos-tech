@@ -1,13 +1,14 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
-import jakarta.persistence.*;
-import lombok.Getter;
+import javax.persistence.*;
+
+import lombok.Data;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "cliente")
-@Getter
+@Data
 public class Cliente implements Serializable{
 	private static final long serialVersionUID = 1L;
 
