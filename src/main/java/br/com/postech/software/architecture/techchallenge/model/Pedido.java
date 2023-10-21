@@ -1,12 +1,11 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
-import javax.persistence.*;
-
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "pedido")

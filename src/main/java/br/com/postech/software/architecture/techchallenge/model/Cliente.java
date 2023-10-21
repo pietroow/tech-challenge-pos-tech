@@ -1,10 +1,10 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
-import javax.persistence.*;
-
 import lombok.Data;
 
 import java.io.Serializable;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cliente")

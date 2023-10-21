@@ -3,13 +3,18 @@ package br.com.postech.software.architecture.techchallenge.model;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
+//import javax.persistence.Column;
+//import javax.persistence.Entity;
+//import javax.persistence.GeneratedValue;
+//import javax.persistence.GenerationType;
+//import javax.persistence.Id;
+//import javax.persistence.Table;
 
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
-import br.com.postech.software.architecture.techchallenge.util.Constantes;
+//import br.com.postech.software.architecture.techchallenge.util.Constantes;
 import lombok.Data;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.Parameter;
 
 @Entity
 @Table(name = "produto")
@@ -27,8 +32,8 @@ public class Produto implements Serializable{
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal valor;
 
-	@Type(type = Constantes.ASSOCIACAO_TYPE, parameters = {
-			@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum") })
+//	@Type(type = Constantes.ASSOCIACAO_TYPE, parameters = {
+//			@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum") })
 	@Column(name = "categoria_id")
 	private CategoriaEnum categoria;
 }

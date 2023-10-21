@@ -17,9 +17,9 @@ import br.com.postech.software.architecture.techchallenge.configuration.Paramete
 @EntityScan(basePackages = { ParameterConfig.PACKAGE_MODEL })
 @EnableJpaRepositories(basePackages = { ParameterConfig.PACKAGE_REPOSITORY_JPA })
 @ComponentScan(basePackages = {ParameterConfig.PACKAGE_CONTROLLERS,
+							   ParameterConfig.PACKAGE_CONFIGURATION,
 							   ParameterConfig.PACKAGE_SERVICE,
-							   ParameterConfig.PACKAGE_REPOSITORY_JDBC
-							   })
+							   ParameterConfig.PACKAGE_REPOSITORY_JDBC})
 public class ServletInitializer extends SpringBootServletInitializer {
 
 	
