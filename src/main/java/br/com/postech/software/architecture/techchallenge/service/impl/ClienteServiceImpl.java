@@ -1,21 +1,21 @@
 package br.com.postech.software.architecture.techchallenge.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import br.com.postech.software.architecture.techchallenge.model.Cliente;
-import br.com.postech.software.architecture.techchallenge.repository.jpa.IClienteJpaRepository;
+import br.com.postech.software.architecture.techchallenge.repository.jpa.ClienteJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.IClientService;
 
 @Service
 public class ClienteServiceImpl implements IClientService {
 
-//	@Autowired
-	private IClienteJpaRepository clienteJpaRepository;
+	@Autowired
+	private ClienteJpaRepository clienteJpaRepository;
 	
-	protected IClienteJpaRepository getPersistencia() {
+	protected ClienteJpaRepository getPersistencia() {
 		return clienteJpaRepository;
 	}
 
@@ -25,7 +25,7 @@ public class ClienteServiceImpl implements IClientService {
 	}
 
 	@Override
-	public Optional<Cliente> findById(Integer id) {
-		return getPersistencia().findById(id);
+	public Cliente findById(Integer id) {
+		return getPersistencia().findById(id).orElseThrow();
 	}
 }

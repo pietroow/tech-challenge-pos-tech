@@ -1,5 +1,6 @@
 package br.com.postech.software.architecture.techchallenge.enums;
 
-public enum Categoria {
+public interface APIEnum {
 
+	public Integer getValue();
 }
