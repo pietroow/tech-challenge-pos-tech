@@ -2,12 +2,12 @@ package br.com.postech.software.architecture.techchallenge.service;
 
 import java.util.List;
 
-import br.com.postech.software.architecture.techchallenge.model.Cliente;
+import br.com.postech.software.architecture.techchallenge.dto.ClienteDTO;
 
 public interface IClientService{
 
-	List<Cliente> findAll();
+	List<ClienteDTO> findAll();
 
-	Cliente findById(Integer id);
+	ClienteDTO findById(Integer id);
 	
 }

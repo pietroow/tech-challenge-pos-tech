@@ -2,11 +2,11 @@ package br.com.postech.software.architecture.techchallenge.service;
 
 import java.util.List;
 
-import br.com.postech.software.architecture.techchallenge.model.Pedido;
+import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 
 public interface IPedidoService {
 
-	List<Pedido> findAll();
+	List<PedidoDTO> findAll();
 	
-	Pedido findById(Integer id);
+	PedidoDTO findById(Integer id);
 }

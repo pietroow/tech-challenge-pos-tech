@@ -2,12 +2,11 @@ package br.com.postech.software.architecture.techchallenge.service;
 
 import java.util.List;
 
-import br.com.postech.software.architecture.techchallenge.model.Produto;
-
+import br.com.postech.software.architecture.techchallenge.dto.ProdutoDTO;
 
 public interface IProdutoService {
 
-	List<Produto> findAll();
+	List<ProdutoDTO> findAll();
 	
-	Produto findById(Integer id);
+	ProdutoDTO findById(Integer id);
 }

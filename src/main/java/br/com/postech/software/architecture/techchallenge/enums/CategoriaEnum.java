@@ -35,6 +35,4 @@ public enum CategoriaEnum implements APIEnum{
 		
 		return CategoriaEnum.DESCONHECIDO;
 	}
-
-	
 }
