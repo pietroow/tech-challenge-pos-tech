@@ -27,4 +27,7 @@ public class Cliente implements Serializable{
 
 	@Column(nullable = true,length = 255)
 	private String senha;
+
+	@Column(nullable = false, length = 1)
+	private char status;
 }

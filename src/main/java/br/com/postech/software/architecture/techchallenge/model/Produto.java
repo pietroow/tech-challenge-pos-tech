@@ -32,6 +32,9 @@ public class Produto implements Serializable{
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal valor;
 
+	@Column(nullable = false, length = 1)
+	private char status;
+
 //	@Type(type = Constantes.ASSOCIACAO_TYPE, parameters = {
 //			@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum") })
 	@Column(name = "categoria_id")
