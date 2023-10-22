@@ -20,6 +20,9 @@ public class Cliente implements Serializable{
 	private String cpf;
 
 	@Column(nullable = true, length = 255)
+	private String name;
+
+	@Column(nullable = true, length = 255)
 	private String email;
 
 	@Column(nullable = true,length = 255)

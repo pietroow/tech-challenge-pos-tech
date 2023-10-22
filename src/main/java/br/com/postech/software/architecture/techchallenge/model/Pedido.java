@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.persistence.*;
 
@@ -17,12 +18,15 @@ public class Pedido implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(columnDefinition = "JSONB", nullable = false)
-	private String produtos;
-
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
+
+	@ManyToMany
+	@JoinTable(name = "pedido_produto",
+			joinColumns = @JoinColumn(name = "pedido_id"),
+			inverseJoinColumns = @JoinColumn(name = "produto_id"))
+	private List<Produto> produtos;
 
 	@Column(name = "data_pedido", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataPedido;
