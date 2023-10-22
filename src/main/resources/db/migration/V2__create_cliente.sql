@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS Cliente (
                                        id INTEGER PRIMARY KEY,
-                                       cpf VARCHAR(14) NOT NULL UNIQUE,
-                                       senha VARCHAR(255) NOT NULL
+                                       cpf VARCHAR(14)  UNIQUE,
+                                       email VARCHAR(255),
+                                       senha VARCHAR(255)
 );
