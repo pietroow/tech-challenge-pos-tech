@@ -5,15 +5,7 @@ import java.math.BigDecimal;
 
 import jakarta.persistence.*;
 
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.GenerationType;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
-
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
-//import br.com.postech.software.architecture.techchallenge.util.Constantes;
 import lombok.Data;
 
 @Entity
@@ -31,6 +23,9 @@ public class Produto implements Serializable{
 
 	@Column(nullable = false, precision = 10, scale = 2)
 	private BigDecimal valor;
+
+	@Column(nullable = false, length = 1)
+	private char status;
 
 //	@Type(type = Constantes.ASSOCIACAO_TYPE, parameters = {
 //			@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum") })
