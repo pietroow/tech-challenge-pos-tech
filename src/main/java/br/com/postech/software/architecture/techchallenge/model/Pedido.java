@@ -6,6 +6,11 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+
+import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
+import br.com.postech.software.architecture.techchallenge.util.Constantes;
 import jakarta.persistence.*;
 
 @Entity
@@ -30,4 +35,9 @@ public class Pedido implements Serializable{
 
 	@Column(name = "data_pedido", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataPedido;
+	
+	@Type(value = br.com.postech.software.architecture.techchallenge.enums.AssociacaoType.class, 
+	        parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "StatusPedidoEnum")})
+	@Column(name = "status_pedido_id")
+	private StatusPedidoEnum statusPedido;
 }

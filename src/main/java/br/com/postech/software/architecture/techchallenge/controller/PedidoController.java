@@ -23,8 +23,8 @@ public class PedidoController {
 	private IPedidoService pedidoService;
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON)
-    public ResponseEntity<List<PedidoDTO>> listarPedidos() throws Exception{
-        return new ResponseEntity<>(pedidoService.findAll(), HttpStatus.OK );
+    public ResponseEntity<List<PedidoDTO>> listarTodosPedidosAtivos() throws Exception{
+        return new ResponseEntity<>(pedidoService.findTodosPedidosAtivos(), HttpStatus.OK );
     }
 	
 	@GetMapping(path = "idPedido", produces = MediaType.APPLICATION_JSON)

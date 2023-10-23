@@ -17,6 +17,7 @@ import org.springframework.util.ObjectUtils;
 
 import br.com.postech.software.architecture.techchallenge.util.Constantes;
 
+@SuppressWarnings("rawtypes")
 public class AssociacaoType implements UserType<APIEnum>, DynamicParameterizedType {
 
 	private Class<?> enumClass;
