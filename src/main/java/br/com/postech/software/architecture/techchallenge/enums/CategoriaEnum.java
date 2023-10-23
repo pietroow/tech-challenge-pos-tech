@@ -2,7 +2,6 @@ package br.com.postech.software.architecture.techchallenge.enums;
 
 public enum CategoriaEnum implements APIEnum{
 
-	DESCONHECIDO(0, "Desconhecido"),
 	LANCHE(1, "Lanche"),
 	ACOMPANHAMENTO(2, "Acompanhamento"),
 	BEBIDA(3, "Bebida"),
@@ -15,7 +14,7 @@ public enum CategoriaEnum implements APIEnum{
 		this.value = value;
 		this.descricao = descricao;
 	}
-
+	
 	@Override
 	public Integer getValue() {
 		return value;
@@ -25,14 +24,13 @@ public enum CategoriaEnum implements APIEnum{
 		return descricao;
 	}
 	
-	public static CategoriaEnum get(Integer value) {
-		
+	public static CategoriaEnum get(Integer value) {		
 		for (CategoriaEnum categoria : CategoriaEnum.values()) {
-			if(categoria.getValue() == value) {
+			if(categoria.getValue() == value ) {
 				return categoria;
 			}
 		}
 		
-		return CategoriaEnum.DESCONHECIDO;
-	}
+		return null;
+	}	
 }
