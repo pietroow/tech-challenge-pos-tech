@@ -35,7 +35,5 @@ public enum StatusPedidoEnum implements APIEnum<StatusPedidoEnum>{
 			}
 		}
 		return StatusPedidoEnum.DESCONHECIDO;
-	}
-	
-	
+	}		
 }
