@@ -1,7 +1,8 @@
 package br.com.postech.software.architecture.techchallenge.enums;
 
 public enum CategoriaEnum implements APIEnum{
-
+	
+	DESCONHECIDO(0, "Desconhecida"),
 	LANCHE(1, "Lanche"),
 	ACOMPANHAMENTO(2, "Acompanhamento"),
 	BEBIDA(3, "Bebida"),
@@ -31,6 +32,6 @@ public enum CategoriaEnum implements APIEnum{
 			}
 		}
 		
-		return null;
+		return CategoriaEnum.DESCONHECIDO;
 	}	
 }

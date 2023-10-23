@@ -36,7 +36,7 @@ public class Produto implements Serializable{
 	private char status;
 
 	@Type(value = br.com.postech.software.architecture.techchallenge.enums.AssociacaoType.class, 
-	        parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum") })
+	        parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum")})
 	@Column(name = "categoria_id")
 	private CategoriaEnum categoria;
 }
