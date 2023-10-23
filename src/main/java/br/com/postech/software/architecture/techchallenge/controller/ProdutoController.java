@@ -23,12 +23,12 @@ public class ProdutoController {
 	private IProdutoService produtoService;
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON)
-    public ResponseEntity<List<ProdutoDTO>> listarProdutos(){
+    public ResponseEntity<List<ProdutoDTO>> listarProdutos() throws Exception{
         return new ResponseEntity<>(produtoService.findAll(), HttpStatus.OK );
     }
 	
 	@GetMapping(path = "{idProduto}", produces=MediaType.APPLICATION_JSON)
-    public ResponseEntity<ProdutoDTO> buscarProduto(@PathVariable("idProduto") Integer idProduto){
+    public ResponseEntity<ProdutoDTO> buscarProduto(@PathVariable("idProduto") Integer idProduto) throws Exception{
         return new ResponseEntity<>(produtoService.findById(idProduto), HttpStatus.OK );
     }
 }
