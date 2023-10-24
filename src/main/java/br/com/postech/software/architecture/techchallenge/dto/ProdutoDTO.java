@@ -1,47 +1,35 @@
 package br.com.postech.software.architecture.techchallenge.dto;
 
+import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProdutoDTO {
 
-	private String nome; 	
-	private String categoria;
-	private BigDecimal preco;
-	private String descricao;
-	private List<String> imagens = new ArrayList<String>();
-	
-	public ProdutoDTO() {
-		super();
-	}
+    private Integer id;
+    @NotNull
+    private String nome;
+    @NotNull
+    private CategoriaEnum categoria;
+    @NotNull
+    @Min(1)
+    private BigDecimal valor;
+    @NotNull
+    private String descricao;
+    @NotEmpty
+    private List<String> imagens;
 
-	public ProdutoDTO(String nome, String categoria, BigDecimal preco, String descricao, List<String> imagens) {
-		super();
-		this.nome = nome;
-		this.categoria = categoria;
-		this.preco = preco;
-		this.descricao = descricao;
-		this.imagens = imagens;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public String getCategoria() {
-		return categoria;
-	}
-
-	public BigDecimal getPreco() {
-		return preco;
-	}
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-	public List<String> getImagens() {
-		return imagens;
-	}	
 }

@@ -25,18 +25,18 @@ package br.com.postech.software.architecture.techchallenge.enums;
 //    private Method recreateStringMthd;
 //	private String metodoGetEnum = "get";
 //	private String metodoGetValue = "getValue";
-//	
+//
 //	@Override
 //	public void setParameterValues(Properties parameters) {
 //		if (parameters != null) {
 //			if (StringUtils.isNotEmpty(parameters.getProperty("metodoGetEnum"))) {
 //				metodoGetEnum = parameters.getProperty("metodoGetEnum");
 //			}
-//			
+//
 //			if (StringUtils.isNotEmpty(parameters.getProperty("metodoGetValue"))) {
 //				metodoGetValue = parameters.getProperty("metodoGetValue");
 //			}
-//			
+//
 //			String className = parameters.getProperty("enumClassName");
 //			Class<?> returnType = null;
 //
@@ -52,7 +52,7 @@ package br.com.postech.software.architecture.techchallenge.enums;
 //			} catch (NoSuchMethodException e) {
 //				e.printStackTrace();
 //			}
-//		}			
+//		}
 //	}
 //
 //	@Override
@@ -96,7 +96,7 @@ package br.com.postech.software.architecture.techchallenge.enums;
 //	public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
 //			throws HibernateException, SQLException {
 //		Integer prepStmtVal = null;
-//		
+//
 //		if (value == null) {
 //			st.setObject(index, null);
 //		} else {
@@ -111,7 +111,7 @@ package br.com.postech.software.architecture.techchallenge.enums;
 //				e.printStackTrace();
 //			}
 //		}
-//		
+//
 //	}
 //
 //	@Override
