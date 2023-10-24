@@ -1,37 +1,20 @@
 package br.com.postech.software.architecture.techchallenge.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClienteDTO {
 
+	private Long id;
 	private String nome;
 	private String email;
 	private String cpf;
 	private String senha;
-	
-	public ClienteDTO() {
-		super();
-	}
-	
-	public ClienteDTO(String nome, String email, String cpf, String senha) {
-		super();
-		this.nome = nome;
-		this.email = email;
-		this.cpf = cpf;
-		this.senha = senha;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public String getCpf() {
-		return cpf;
-	}
-
-	public String getSenha() {
-		return senha;
-	}
+	private char status;
 }

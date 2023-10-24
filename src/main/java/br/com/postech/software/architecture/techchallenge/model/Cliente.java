@@ -13,7 +13,7 @@ public class Cliente implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
 	@Column(nullable = true, length = 255)
@@ -28,6 +28,6 @@ public class Cliente implements Serializable{
 	@Column(nullable = true,length = 255)
 	private String senha;
 
-	@Column(nullable = false, length = 1)
+	@Column(nullable = true, length = 1)
 	private char status;
 }
