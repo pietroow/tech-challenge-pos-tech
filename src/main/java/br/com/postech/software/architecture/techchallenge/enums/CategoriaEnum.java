@@ -1,38 +1,18 @@
 package br.com.postech.software.architecture.techchallenge.enums;
 
-public enum CategoriaEnum implements APIEnum{
+public enum CategoriaEnum {
+    LANCHE("lanche"),
+    ACOMPANHAMENTO("acompanhamento"),
+    BEBIDA("bebida"),
+    SOBREMESA("sobremesa");
 
-	DESCONHECIDO(0, "Desconhecido"),
-	LANCHE(1, "Lanche"),
-	ACOMPANHAMENTO(2, "Acompanhamento"),
-	BEBIDA(3, "Bebida"),
-	SOBREMESA(4, "Sobremesa");
-	
-	private Integer value;
-	private String descricao;
-	
-	private CategoriaEnum(Integer value, String descricao) {
-		this.value = value;
-		this.descricao = descricao;
-	}
+    private final String value;
 
-	@Override
-	public Integer getValue() {
-		return value;
-	}
+    CategoriaEnum(String value) {
+        this.value = value;
+    }
 
-	public String getDescricao() {
-		return descricao;
-	}
-	
-	public static CategoriaEnum get(Integer value) {
-		
-		for (CategoriaEnum categoria : CategoriaEnum.values()) {
-			if(categoria.getValue() == value) {
-				return categoria;
-			}
-		}
-		
-		return CategoriaEnum.DESCONHECIDO;
-	}
+    public String value() {
+        return this.value;
+    }
 }
