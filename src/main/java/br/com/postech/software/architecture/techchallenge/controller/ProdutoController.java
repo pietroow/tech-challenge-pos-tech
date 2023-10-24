@@ -3,7 +3,6 @@ package br.com.postech.software.architecture.techchallenge.controller;
 import br.com.postech.software.architecture.techchallenge.dto.ProdutoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
 import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +32,6 @@ public class ProdutoController {
 
 
     @PostMapping
-    @Transactional
     public ResponseEntity<ProdutoDTO> salvar(
             @RequestBody @Valid ProdutoDTO produtoDTO,
             UriComponentsBuilder uriBuilder
@@ -44,7 +42,6 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity deleteById(
             @PathVariable Integer id
     ) {
@@ -53,7 +50,6 @@ public class ProdutoController {
     }
 
     @PutMapping
-    @Transactional
     public ResponseEntity<ProdutoDTO> autualizar(
             @RequestBody @Valid ProdutoDTO produtoDTO
     ) {
