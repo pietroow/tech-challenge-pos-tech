@@ -1,8 +1,6 @@
 package br.com.postech.software.architecture.techchallenge.enums;
 
-public interface APIEnum<T> {
+public interface APIEnum {
 
-	public Integer getValue();
-	
-	T get(Integer value);
+    public Integer getValue();
 }
