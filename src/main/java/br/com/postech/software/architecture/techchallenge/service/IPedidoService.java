@@ -6,7 +6,7 @@ import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 
 public interface IPedidoService {
 
-	List<PedidoDTO> findAll();
+	List<PedidoDTO> findTodosPedidosAtivos();
 	
 	PedidoDTO findById(Integer id);
 }
