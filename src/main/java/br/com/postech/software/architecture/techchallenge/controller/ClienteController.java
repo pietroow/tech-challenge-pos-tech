@@ -34,13 +34,13 @@ public class ClienteController {
     @PostMapping(consumes=MediaType.APPLICATION_JSON, produces=MediaType.APPLICATION_JSON)
     @Transactional
    public ResponseEntity<ClienteDTO> salvarCliente(@RequestBody ClienteDTO clienteDTO) throws Exception{
-        clienteDTO.setStatus("1".charAt(0));
+        clienteDTO.setStatus('1');
         return new ResponseEntity<>(clienteService.save(clienteDTO), HttpStatus.CREATED );
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     @Transactional
-    public ResponseEntity<ClienteDTO> atualizarCliente(@PathVariable Long id, @RequestBody ClienteDTO clienteDTO) {
+    public ResponseEntity<ClienteDTO> atualizarCliente(@PathVariable Integer id, @RequestBody ClienteDTO clienteDTO) {
         ClienteDTO updatedClienteDTO = clienteService.atualizarCliente(id, clienteDTO);
 
         if (updatedClienteDTO != null) {
@@ -52,7 +52,7 @@ public class ClienteController {
 
     @PutMapping(value = "/desativar/{id}", produces = MediaType.APPLICATION_JSON)
     @Transactional
-    public ResponseEntity<ClienteDTO> desativarCliente(@PathVariable Long id) {
+    public ResponseEntity<ClienteDTO> desativarCliente(@PathVariable Integer id) {
         ClienteDTO clienteDTO = clienteService.desativarCliente(id);
 
         if (clienteDTO != null) {

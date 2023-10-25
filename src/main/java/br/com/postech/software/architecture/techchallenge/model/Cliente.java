@@ -14,7 +14,7 @@ public class Cliente implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Integer id;
 	
 	@Column(nullable = true, length = 255)
 	private String nome;

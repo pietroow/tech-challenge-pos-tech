@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
@@ -14,6 +15,7 @@ import br.com.postech.software.architecture.techchallenge.dto.ClienteDTO;
 import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.ClienteJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.IClientService;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class ClienteServiceImpl implements IClientService {
@@ -21,7 +23,7 @@ public class ClienteServiceImpl implements IClientService {
 	@Autowired
 	private ClienteJpaRepository clienteJpaRepository;
 	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
-	
+
 	protected ClienteJpaRepository getPersistencia() {
 		return clienteJpaRepository;
 	}
@@ -36,54 +38,52 @@ public class ClienteServiceImpl implements IClientService {
 
 	@Override
 	public ClienteDTO findById(Integer id) {
-		Optional<Cliente> cliente = getPersistencia().findById(id);
-		if(!cliente.isEmpty()) {
-			return MAPPER.map(cliente, ClienteDTO.class);
+		Optional<Cliente> cliente = getPersistencia().findByIdAndStatus(id, '1');
+		if (cliente.isPresent()) {
+			return MAPPER.map(cliente.get(), ClienteDTO.class);
 		}
-		return null;
+		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
 	}
 
-    @Override
-    public ClienteDTO save(ClienteDTO clienteDTO) {
+	@Override
+	public ClienteDTO save(ClienteDTO clienteDTO) {
 		var cliente = MAPPER.map(clienteDTO, Cliente.class);
 
 		cliente = getPersistencia().save(cliente);
 
 		return MAPPER.map(cliente, ClienteDTO.class);
-    }
+	}
 
 	@Override
-	public ClienteDTO atualizarCliente(Long id, ClienteDTO clienteDTO) {
-		// Primeiro, verifique se o cliente com o ID fornecido existe no banco de dados
-		Cliente clienteExistente = getPersistencia().findById(id);
+	public ClienteDTO atualizarCliente(Integer id, ClienteDTO clienteDTO) {
+		Optional<Cliente> clienteOptional = getPersistencia().findById(id);
 
-		if (clienteExistente != null) {
-			// Atualize os detalhes do cliente existente com base no clienteDTO
+		if (clienteOptional.isPresent()) {
+			Cliente clienteExistente = clienteOptional.get();
 			clienteExistente.setNome(clienteDTO.getNome());
 			clienteExistente.setEmail(clienteDTO.getEmail());
 			clienteExistente.setCpf(clienteDTO.getCpf());
 
-			// Salve as atualizações
 			clienteExistente = getPersistencia().save(clienteExistente);
 
 			return MAPPER.map(clienteExistente, ClienteDTO.class);
 		} else {
-			// Se o cliente não existir, retorne null ou lance uma exceção
-			return null;
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
 		}
 	}
 
 	@Override
-	public ClienteDTO desativarCliente(Long id) {
-		Cliente cliente = getPersistencia().findById(id);
+	public ClienteDTO desativarCliente(Integer id) {
+		Optional<Cliente> clienteOptional = getPersistencia().findById(id);
 
-		if (cliente != null) {
-			cliente.setStatus('0'); // Defina o status como 0 (inativo)
+		if (clienteOptional.isPresent()) {
+			Cliente cliente = clienteOptional.get();
+			cliente.setStatus('0');
 			cliente = getPersistencia().save(cliente);
 
 			return MAPPER.map(cliente, ClienteDTO.class);
 		} else {
-			return null; // Cliente não encontrado
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
 		}
 	}
 }

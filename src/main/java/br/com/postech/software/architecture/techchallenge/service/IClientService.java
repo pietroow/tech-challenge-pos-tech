@@ -12,7 +12,7 @@ public interface IClientService{
 
     ClienteDTO save(ClienteDTO clienteDTO);
 
-	ClienteDTO atualizarCliente(Long id, ClienteDTO clienteDTO);
+	ClienteDTO atualizarCliente(Integer id, ClienteDTO clienteDTO);
 
-	ClienteDTO desativarCliente(Long id);
+	ClienteDTO desativarCliente(Integer id);
 }
