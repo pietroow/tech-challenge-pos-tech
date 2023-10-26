@@ -1,8 +1,9 @@
 package br.com.postech.software.architecture.techchallenge.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
+import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
+import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
 import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.IPedidoService;
@@ -28,7 +31,7 @@ public class PedidoServiceImpl implements IPedidoService {
 	}
 
 	@Override
-	public List<PedidoDTO> findTodosPedidosAtivos() {
+	public List<PedidoDTO> findTodosPedidosAtivos()throws BusinessException{
 		List<Pedido> pedidos = getPersistencia()
 				.findByStatusPedidoNotIn(
 						Arrays.asList(
@@ -40,11 +43,24 @@ public class PedidoServiceImpl implements IPedidoService {
 	}
 
 	@Override
-	public PedidoDTO findById(Integer id) {
-		Optional<Pedido> pedido = getPersistencia().findById(id);
-		if(!pedido.isEmpty()) {
-			return MAPPER.map(pedido, PedidoDTO.class);
+	public PedidoDTO findById(Integer id) throws BusinessException{
+		Pedido pedido = getPersistencia()
+				.findById(id)
+				.orElseThrow(() -> new NotFoundException("Pedido não encontrado!"));
+		
+		return MAPPER.map(pedido, PedidoDTO.class);
+	}
+
+	@Override
+	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {		
+		Pedido pedido = MAPPER.map(pedidoDTO, Pedido.class);
+		pedido.setDataPedido(LocalDateTime.now());
+		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
+		
+		if(Objects.nonNull(pedidoDTO.getCpfCliente())) {
+			
 		}
-		return null;
+		
+		return MAPPER.map(getPersistencia().save(pedido), PedidoDTO.class);
 	}
 }

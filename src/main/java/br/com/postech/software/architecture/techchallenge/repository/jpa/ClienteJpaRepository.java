@@ -12,5 +12,9 @@ public interface ClienteJpaRepository extends JpaRepository<Cliente, Integer> {
 
     List<Cliente> findAll();
 
+    Optional<Cliente> findByIdAndStatus(Integer id, char status);
+
     Optional<Cliente> findById(Integer id);
+    
+    List<Cliente> findByStatus(char c);
 }

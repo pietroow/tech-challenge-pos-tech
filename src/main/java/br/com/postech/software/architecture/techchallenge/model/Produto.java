@@ -39,4 +39,5 @@ public class Produto implements Serializable{
 	        parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum")})
 	@Column(name = "categoria_id")
 	private CategoriaEnum categoria;
+	
 }
