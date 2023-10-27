@@ -36,6 +36,6 @@ public class PedidoController {
 	
 	@PostMapping(path = "/checkout", produces = MediaType.APPLICATION_JSON)
 	public ResponseEntity<PedidoDTO> fazerCheckoutFake(@RequestBody PedidoDTO pedidoDTO) throws Exception{
-		return new ResponseEntity<PedidoDTO>(new PedidoDTO(), HttpStatus.CREATED);
+		return new ResponseEntity<PedidoDTO>(pedidoService.fazerPedidoFake(pedidoDTO), HttpStatus.CREATED);
 	}
 }

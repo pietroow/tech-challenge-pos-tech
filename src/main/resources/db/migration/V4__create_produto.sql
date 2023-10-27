@@ -4,6 +4,5 @@ CREATE TABLE IF NOT EXISTS produto (
                                        descricao VARCHAR(500),
                                        categoria_id INTEGER,
                                        valor NUMERIC(10, 2) NOT NULL,
-                                           FOREIGN KEY (categoria_id) REFERENCES categoria (id),
-                                       FOREIGN KEY (pedido_id) REFERENCES pedido (id)
+                                           FOREIGN KEY (categoria_id) REFERENCES categoria (id)
 );

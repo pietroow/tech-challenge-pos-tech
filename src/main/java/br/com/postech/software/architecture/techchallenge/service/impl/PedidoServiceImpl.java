@@ -4,27 +4,34 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
+import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
+import br.com.postech.software.architecture.techchallenge.service.IClientService;
 import br.com.postech.software.architecture.techchallenge.service.IPedidoService;
+import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 
 @Service
 public class PedidoServiceImpl implements IPedidoService {
+	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
 	
 	@Autowired
 	private PedidoJpaRepository pedidoJpaRepository;
-	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
+	@Autowired
+	private IClientService clientService;
 	
 	protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
@@ -52,15 +59,33 @@ public class PedidoServiceImpl implements IPedidoService {
 	}
 
 	@Override
+	@Transactional
 	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {		
 		Pedido pedido = MAPPER.map(pedidoDTO, Pedido.class);
 		pedido.setDataPedido(LocalDateTime.now());
 		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
 		
-		if(Objects.nonNull(pedidoDTO.getCpfCliente())) {
+		if(Objects.nonNull(pedido.getCliente())) {
+			pedido.getCliente().setCpf(CpfCnpjUtil.removeMaskCPFCNPJ(pedido.getCliente().getCpf()));
+			Cliente cliente = clientService.findByCpfOrNomeOrEmail(pedido.getCliente().getCpf(),
+					pedido.getCliente().getNome(), pedido.getCliente().getEmail());
+			if(Objects.nonNull(pedido.getCliente())) {
+				throw new BusinessException("Cliente não encontrado!");
+			}
 			
-		}
+			pedido.setCliente(cliente);
+		}	
 		
-		return MAPPER.map(getPersistencia().save(pedido), PedidoDTO.class);
+		Optional.ofNullable(pedido.getProdutos())
+			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"))
+			.stream()
+			.flatMap(produto -> produto.getImagens().stream())
+			.findAny()
+			.filter(img -> Objects.nonNull(img.getPath()))
+			.orElseThrow(() -> new BusinessException("Imagem do produto é obrigatória!"));
+		
+		pedido = getPersistencia().saveAndFlush(pedido);
+		
+		return MAPPER.map(pedido, PedidoDTO.class);
 	}
 }

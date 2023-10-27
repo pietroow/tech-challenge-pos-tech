@@ -1,6 +1,5 @@
 package br.com.postech.software.architecture.techchallenge.dto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotEmpty;
@@ -16,6 +15,6 @@ public class PedidoDTO {
     private String senhaCliente;
     private String dataPedido;
     @NotEmpty
-    private List<ProdutoDTO> produtos = new ArrayList<ProdutoDTO>();
+    private List<ProdutoDTO> produtos;
 
 }

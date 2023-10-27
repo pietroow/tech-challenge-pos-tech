@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.dto.ClienteDTO;
+import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.ClienteJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.IClientService;
@@ -84,5 +85,10 @@ public class ClienteServiceImpl implements IClientService {
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
 		}
+	}
+
+	@Override
+	public Cliente findByCpfOrNomeOrEmail(String cpf, String nome, String email) throws BusinessException {
+		return getPersistencia().findByCpfOrNomeOrEmail(cpf, nome, email);
 	}
 }

@@ -20,14 +20,15 @@ public class Pedido implements Serializable{
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
 
-	@ManyToMany
+	@ManyToMany(cascade=CascadeType.ALL)
 	@JoinTable(name = "pedido_produto",
 			joinColumns = @JoinColumn(name = "pedido_id"),
 			inverseJoinColumns = @JoinColumn(name = "produto_id"))
