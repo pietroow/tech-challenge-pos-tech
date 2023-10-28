@@ -1,6 +1,6 @@
 package br.com.postech.software.architecture.techchallenge.enums;
 
-public enum CategoriaEnum implements APIEnum<CategoriaEnum>{
+public enum CategoriaEnum implements APIEnum{
 	
 	DESCONHECIDO(0, "Desconhecida"),
 	LANCHE(1, "Lanche"),
@@ -25,8 +25,7 @@ public enum CategoriaEnum implements APIEnum<CategoriaEnum>{
 		return descricao;
 	}
 
-	@Override
-	public CategoriaEnum get(Integer value) {
+	public static CategoriaEnum get(Integer value) {
 		for (CategoriaEnum categoria : CategoriaEnum.values()) {
 			if(categoria.getValue() == value ) {
 				return categoria;

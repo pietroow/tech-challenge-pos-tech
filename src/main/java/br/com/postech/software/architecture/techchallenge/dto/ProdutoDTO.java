@@ -30,5 +30,5 @@ public class ProdutoDTO {
     @NotNull
     private String descricao;
     @NotEmpty
-    private List<String> imagens;
+    private List<ProdutoImagesDTO> imagens;
 }

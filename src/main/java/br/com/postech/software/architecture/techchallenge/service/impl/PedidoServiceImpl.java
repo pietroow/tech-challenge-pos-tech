@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,9 @@ public class PedidoServiceImpl implements IPedidoService {
 								StatusPedidoEnum.CANCELADO)
 				);
 		
+		MAPPER.typeMap(Pedido.class, PedidoDTO.class).addMappings(mapper -> {
+			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
+		});
 		return MAPPER.map(pedidos, new TypeToken<List<PedidoDTO>>() {}.getType());
 	}
 
@@ -60,32 +64,49 @@ public class PedidoServiceImpl implements IPedidoService {
 
 	@Override
 	@Transactional
-	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {		
+	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
+		//Obtem os dados do pedido
 		Pedido pedido = MAPPER.map(pedidoDTO, Pedido.class);
 		pedido.setDataPedido(LocalDateTime.now());
 		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
 		
-		if(Objects.nonNull(pedido.getCliente())) {
-			pedido.getCliente().setCpf(CpfCnpjUtil.removeMaskCPFCNPJ(pedido.getCliente().getCpf()));
-			Cliente cliente = clientService.findByCpfOrNomeOrEmail(pedido.getCliente().getCpf(),
-					pedido.getCliente().getNome(), pedido.getCliente().getEmail());
-			if(Objects.nonNull(pedido.getCliente())) {
-				throw new BusinessException("Cliente não encontrado!");
-			}
-			
-			pedido.setCliente(cliente);
-		}	
+		valideCliente(pedido);	
 		
+		valideProduto(pedido);
+		
+		//Salva o pedido e obtem seu numero
+		pedido = getPersistencia().saveAndFlush(pedido);
+		MAPPER.typeMap(Pedido.class, PedidoDTO.class).addMappings(mapper -> {
+			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
+		});
+		
+		return MAPPER.map(pedido, PedidoDTO.class);
+	}
+
+	private void valideProduto(Pedido pedido)  throws BusinessException{
+		//Verifica se as imagens dos produtos 
 		Optional.ofNullable(pedido.getProdutos())
 			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"))
 			.stream()
 			.flatMap(produto -> produto.getImagens().stream())
 			.findAny()
-			.filter(img -> Objects.nonNull(img.getPath()))
+			.filter(img -> StringUtils.isNotBlank(img.getPath()))
 			.orElseThrow(() -> new BusinessException("Imagem do produto é obrigatória!"));
-		
-		pedido = getPersistencia().saveAndFlush(pedido);
-		
-		return MAPPER.map(pedido, PedidoDTO.class);
+	}
+
+	private void valideCliente(Pedido pedido) throws BusinessException{
+		//Caso informe dados do cliente, é obrigatorio o cliente existir
+		if(Objects.nonNull(pedido.getCliente())) {
+			pedido.getCliente().setCpf(CpfCnpjUtil.removeMaskCPFCNPJ(pedido.getCliente().getCpf()));
+			
+			Cliente cliente = clientService.findByCpfOrNomeOrEmail(pedido.getCliente().getCpf(),
+					pedido.getCliente().getNome(), pedido.getCliente().getEmail());
+			
+			if(Objects.nonNull(pedido.getCliente())) {
+				throw new BusinessException("Cliente não encontrado!");
+			}
+			
+			pedido.setCliente(cliente);
+		}
 	}
 }

@@ -10,33 +10,33 @@ import java.sql.Types;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.usertype.DynamicParameterizedType;
+import org.hibernate.usertype.ParameterizedType;
 import org.hibernate.usertype.UserType;
 import org.springframework.util.ObjectUtils;
 
 import br.com.postech.software.architecture.techchallenge.util.Constantes;
 
-@SuppressWarnings("rawtypes")
-public class AssociacaoType implements UserType<APIEnum>, DynamicParameterizedType {
+public class AssociacaoType implements UserType<Object>, ParameterizedType {
 
 	private Class<?> enumClass;
     private Method recreateEnumMthd;
     private Method recreateStringMthd;
 	private String metodoGetEnum = "get";
 	private String metodoGetValue = "getValue";
-	
+
 	@Override
 	public void setParameterValues(Properties parameters) {
 		if (parameters != null) {
 			if (StringUtils.isNotEmpty(parameters.getProperty("metodoGetEnum"))) {
 				metodoGetEnum = parameters.getProperty("metodoGetEnum");
 			}
-			
+
 			if (StringUtils.isNotEmpty(parameters.getProperty("metodoGetValue"))) {
 				metodoGetValue = parameters.getProperty("metodoGetValue");
 			}
-			
+
 			String className = parameters.getProperty("enumClassName");
 			Class<?> returnType = null;
 
@@ -52,57 +52,30 @@ public class AssociacaoType implements UserType<APIEnum>, DynamicParameterizedTy
 			} catch (NoSuchMethodException e) {
 				e.printStackTrace();
 			}
-		}			
-	}
-
-	@Override
-	public int getSqlType() {
-		return Types.INTEGER;
+		}
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Class<APIEnum> returnedClass() {
-		return (Class<APIEnum>) enumClass;
+	public Class<Object> returnedClass() {
+		return (Class<Object>) enumClass;
 	}
 
 	@Override
-	public APIEnum nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner)
-			throws SQLException {
-		Integer value = rs.getInt(position);
-		APIEnum returnVal = null;
-		try {
-			returnVal = (APIEnum) recreateEnumMthd.invoke(enumClass, new Object[] { value });
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		return returnVal;
-	}
-
-	@Override
-	public boolean isMutable() {
-		return false;
-	}
-
-	@Override
-	public boolean equals(APIEnum x, APIEnum y) {
+	public boolean equals(Object x, Object y) throws HibernateException {
 		return ObjectUtils.nullSafeEquals(x, y);
 	}
 
 	@Override
-	public int hashCode(APIEnum x) {
+	public int hashCode(Object x) throws HibernateException {
 		return x.hashCode();
 	}
 
 	@Override
-	public void nullSafeSet(PreparedStatement st, APIEnum value, int index,
-			SharedSessionContractImplementor session) throws SQLException {
+	public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session)
+			throws HibernateException, SQLException {
 		Integer prepStmtVal = null;
-		
+
 		if (value == null) {
 			st.setObject(index, null);
 		} else {
@@ -116,11 +89,12 @@ public class AssociacaoType implements UserType<APIEnum>, DynamicParameterizedTy
 			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
-		}		
+		}
+
 	}
 
 	@Override
-	public APIEnum deepCopy(APIEnum value) {
+	public Object deepCopy(Object value) throws HibernateException {
 		if (value == null) {
 			return null;
 		} else {
@@ -129,7 +103,12 @@ public class AssociacaoType implements UserType<APIEnum>, DynamicParameterizedTy
 	}
 
 	@Override
-	public Serializable disassemble(APIEnum value) {
+	public boolean isMutable() {
+		return false;
+	}
+
+	@Override
+	public Serializable disassemble(Object value) throws HibernateException {
 		Object deepCopy = deepCopy(value);
 
 		if (deepCopy instanceof Serializable) {
@@ -140,7 +119,35 @@ public class AssociacaoType implements UserType<APIEnum>, DynamicParameterizedTy
 	}
 
 	@Override
-	public APIEnum assemble(Serializable cached, Object owner) {
-		return (APIEnum) deepCopy((APIEnum)cached);
+	public Object assemble(Serializable cached, Object owner) throws HibernateException {
+		return deepCopy(cached);
 	}
+
+	@Override
+	public Object replace(Object original, Object target, Object owner) throws HibernateException {
+		return deepCopy(original);
+	}
+
+	@Override
+	public int getSqlType() {
+		return Types.INTEGER;
+	}
+
+	@Override
+	public Object nullSafeGet(ResultSet rs, int position, SharedSessionContractImplementor session, Object owner)
+			throws SQLException {
+		Integer value = rs.getInt(position);
+		Object returnVal = null;
+		try {
+			returnVal = recreateEnumMthd.invoke(enumClass, new Object[] { value });
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		return returnVal;
+	}
+
 }
