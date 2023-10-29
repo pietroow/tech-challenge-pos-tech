@@ -36,8 +36,8 @@ public class Pedido implements Serializable{
 	@Column(name = "data_pedido", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataPedido;
 	
-	@Type(value = br.com.postech.software.architecture.techchallenge.enums.AssociacaoType.class, 
-	        parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "StatusPedidoEnum")})
+//	@Type(value = AssociacaoType.class,
+//	        parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "StatusPedidoEnum")})
 	@Column(name = "status_pedido_id")
 	private StatusPedidoEnum statusPedido;
 }

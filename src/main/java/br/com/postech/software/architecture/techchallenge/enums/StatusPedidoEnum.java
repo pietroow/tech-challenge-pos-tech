@@ -27,7 +27,6 @@ public enum StatusPedidoEnum implements APIEnum<StatusPedidoEnum>{
 		return descricao;
 	}
 
-	@Override
 	public StatusPedidoEnum get(Integer value) {
 		for (StatusPedidoEnum status : StatusPedidoEnum.values()) {
 			if(status.getValue() == value ) {
