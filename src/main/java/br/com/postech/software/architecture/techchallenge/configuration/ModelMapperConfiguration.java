@@ -1,5 +1,7 @@
 package br.com.postech.software.architecture.techchallenge.configuration;
 
+import java.util.function.Supplier;
+
 import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
@@ -30,7 +32,7 @@ public class ModelMapperConfiguration implements ContextResolver<ModelMapper> {
 
 	public static ModelMapper getModelMapper() {
 		ModelMapper modelMapper = new NullableMapper();
-		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+		modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
 		modelMapper.getConfiguration().setAmbiguityIgnored(true);
 		modelMapper.getConfiguration().setFieldMatchingEnabled(true);
 		modelMapper.getConfiguration().setFieldAccessLevel(AccessLevel.PRIVATE);
@@ -45,5 +47,9 @@ public class ModelMapperConfiguration implements ContextResolver<ModelMapper> {
 				return source == null ? null : source.trim();
 			}
 		};
+	}
+	
+	public static <S, D> Converter <S, D> converterWithDestinationSupplier(Supplier<? extends D> supplier) {
+	    return ctx -> ctx.getMappingEngine().map(ctx.create(ctx.getSource(), supplier.get()));
 	}
 }

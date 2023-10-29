@@ -1,65 +1,54 @@
 package br.com.postech.software.architecture.techchallenge.handler;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.exception.ErrorDetails;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
 import br.com.postech.software.architecture.techchallenge.exception.PersistenceException;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.List;
 
 @ControllerAdvice
-public class RestHandlerException {
+public class RestHandlerException extends ResponseEntityExceptionHandler {
+	
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorDetails> handleError(Exception exception) {
+		ErrorDetails execptionDetails = new ErrorDetails(
+				HttpStatus.INTERNAL_SERVER_ERROR.value(),
+				exception.getMessage());
+		
+		System.out.println(exception.getMessage());
+		
+		return new ResponseEntity<ErrorDetails>(execptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(BusinessException.class)
+	public ResponseEntity<ErrorDetails> handleBusinessException(BusinessException apiExecption) {
+		ErrorDetails apiExecptionDetails = new ErrorDetails(
+				HttpStatus.BAD_REQUEST.value(), 
+				apiExecption.getMessage());
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorDetails> handleError(Exception exception) {
-        ErrorDetails exceptionDetails = new ErrorDetails(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                exception.getMessage());
+		return new ResponseEntity<ErrorDetails>(apiExecptionDetails, HttpStatus.BAD_REQUEST);
+	}
 
-        return new ResponseEntity<ErrorDetails>(exceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+	@ExceptionHandler(PersistenceException.class)
+	public ResponseEntity<ErrorDetails> handlePersistenceException(PersistenceException execption) {
+		ErrorDetails apiExecptionDetails = new ErrorDetails(
+				HttpStatus.INTERNAL_SERVER_ERROR.value(), 
+				execption.getMessage());
 
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorDetails> handleApiException(BusinessException apiException) {
-        ErrorDetails apiExceptionDetails = new ErrorDetails(
-                HttpStatus.BAD_REQUEST.value(),
-                apiException.getMessage());
-
-        return new ResponseEntity<ErrorDetails>(apiExceptionDetails, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(PersistenceException.class)
-    public ResponseEntity<ErrorDetails> handleApiException(PersistenceException exception) {
-        ErrorDetails apiExceptionDetails = new ErrorDetails(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                exception.getMessage());
-
-        return new ResponseEntity<ErrorDetails>(apiExceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+		return new ResponseEntity<ErrorDetails>(apiExecptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity handleApiException() {
-        return ResponseEntity.notFound().build();
-    }
+    public ResponseEntity<ErrorDetails> handleNotFoundException(NotFoundException exception) {
+    	ErrorDetails apiExceptionDetails = new ErrorDetails(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage());
 
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> handleApiException(MethodArgumentNotValidException ex) {
-
-        BindingResult bindingResult = ex.getBindingResult();
-        List<String> erros = bindingResult.getFieldErrors()
-                .stream()
-                .map(error -> String.format("%s %s", error.getField(), error.getDefaultMessage()))
-                .toList();
-
-        return ResponseEntity
-                .badRequest()
-                .body(erros);
+        return new ResponseEntity<ErrorDetails>(apiExceptionDetails, HttpStatus.NOT_FOUND);
     }
 }

@@ -14,7 +14,7 @@ import br.com.postech.software.architecture.techchallenge.dto.ClienteDTO;
 import br.com.postech.software.architecture.techchallenge.service.IClientService;
 
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("/v1/clientes")
 public class ClienteController {
 
 	@Autowired

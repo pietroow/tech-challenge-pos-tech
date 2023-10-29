@@ -1,9 +1,8 @@
 package br.com.postech.software.architecture.techchallenge.controller;
 
-import br.com.postech.software.architecture.techchallenge.dto.ProdutoDTO;
-import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
-import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
-import jakarta.validation.Valid;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,19 +16,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
+import jakarta.validation.Valid;
+
+import br.com.postech.software.architecture.techchallenge.dto.ProdutoDTO;
+import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
+import br.com.postech.software.architecture.techchallenge.service.IProdutoService;
 
 @RestController
 @RequestMapping("/v1/produtos")
 public class ProdutoController {
 
-
-    private final ProdutoService produtoService;
-
-    public ProdutoController(ProdutoService produtoService) {
-        this.produtoService = produtoService;
-    }
-
+	@Autowired
+	private IProdutoService produtoService;
 
     @PostMapping
     public ResponseEntity<ProdutoDTO> salvar(
@@ -42,7 +40,7 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteById(
+    public ResponseEntity<?> deleteById(
             @PathVariable Integer id
     ) {
         this.produtoService.deleteById(id);
@@ -58,11 +56,9 @@ public class ProdutoController {
 
 
     @GetMapping
-    public ResponseEntity<List<ProdutoDTO>> listarProdutos(
-            @RequestParam(required = false) CategoriaEnum categoria
-    ) {
-        return new ResponseEntity<>(produtoService.findAll(categoria), HttpStatus.OK);
-    }
+	public ResponseEntity<List<ProdutoDTO>> listarProdutos(@RequestParam(required = false) CategoriaEnum categoria) {
+		return new ResponseEntity<>(produtoService.findAll(categoria), HttpStatus.OK);
+	}
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<ProdutoDTO> buscarProdutoPorId(@PathVariable Integer id) {

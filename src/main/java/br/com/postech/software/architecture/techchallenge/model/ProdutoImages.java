@@ -1,15 +1,18 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
 import jakarta.persistence.*;
-import lombok.Builder;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Entity
 @Table(name = "produto_images")
 @Data
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProdutoImages implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -17,10 +20,11 @@ public class ProdutoImages implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull(message = "Caminho da imagem é obrigatório.")
     @Column(nullable = false, length = 500)
     private String path;
 
-//    @ManyToOne
-//    @JoinColumn(name = "produto_id", referencedColumnName = "id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "produto_id")
     private Produto produto;
 }
