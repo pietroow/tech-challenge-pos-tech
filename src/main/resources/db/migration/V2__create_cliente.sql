@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS Cliente (
                                        cpf VARCHAR(14)  UNIQUE,
                                        email VARCHAR(255),
                                        senha VARCHAR(255),
-                                       status CHAR(1) NOT NULL
+                                       status BOOLEAN NOT NULL
 );

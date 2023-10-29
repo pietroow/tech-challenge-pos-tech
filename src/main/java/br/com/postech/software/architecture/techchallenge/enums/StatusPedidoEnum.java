@@ -1,6 +1,6 @@
 package br.com.postech.software.architecture.techchallenge.enums;
 
-public enum StatusPedidoEnum implements APIEnum<StatusPedidoEnum>{
+public enum StatusPedidoEnum implements APIEnum{
 
 	DESCONHECIDO(0, "Desconhecido"),
 	REALIZADO(1, "Realizado"),
@@ -22,17 +22,27 @@ public enum StatusPedidoEnum implements APIEnum<StatusPedidoEnum>{
 	public Integer getValue() {
 		return value;
 	}
+	
 
 	public String getDescricao() {
 		return descricao;
 	}
 
-	public StatusPedidoEnum get(Integer value) {
+	public static StatusPedidoEnum get(Integer value) {
 		for (StatusPedidoEnum status : StatusPedidoEnum.values()) {
 			if(status.getValue() == value ) {
 				return status;
 			}
 		}
 		return StatusPedidoEnum.DESCONHECIDO;
-	}		
+	}
+	
+	public static StatusPedidoEnum getByDescricao(String descricao) {
+		for (StatusPedidoEnum status : StatusPedidoEnum.values()) {
+			if(status.getDescricao().equals(descricao)) {
+				return status;
+			}
+		}
+		return StatusPedidoEnum.DESCONHECIDO;
+	}
 }

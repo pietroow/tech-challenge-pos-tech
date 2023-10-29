@@ -4,17 +4,22 @@ import br.com.postech.software.architecture.techchallenge.exception.BusinessExce
 import br.com.postech.software.architecture.techchallenge.exception.ErrorDetails;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
 import br.com.postech.software.architecture.techchallenge.exception.PersistenceException;
+import com.google.gson.Gson;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 
 @ControllerAdvice
-public class RestHandlerException {
+public class RestHandlerException extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDetails> handleError(Exception exception) {
@@ -22,35 +27,39 @@ public class RestHandlerException {
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 exception.getMessage());
 
-        return new ResponseEntity<ErrorDetails>(exceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorDetails> handleApiException(BusinessException apiException) {
-        ErrorDetails apiExceptionDetails = new ErrorDetails(
+    public ResponseEntity<ErrorDetails> handleBusinessException(BusinessException apiExecption) {
+        ErrorDetails apiExeceptionDetails = new ErrorDetails(
                 HttpStatus.BAD_REQUEST.value(),
-                apiException.getMessage());
+                apiExecption.getMessage());
 
-        return new ResponseEntity<ErrorDetails>(apiExceptionDetails, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(apiExeceptionDetails, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(PersistenceException.class)
-    public ResponseEntity<ErrorDetails> handleApiException(PersistenceException exception) {
-        ErrorDetails apiExceptionDetails = new ErrorDetails(
+    public ResponseEntity<ErrorDetails> handlePersistenceException(PersistenceException exeception) {
+        ErrorDetails apiExeceptionDetails = new ErrorDetails(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                exception.getMessage());
+                exeception.getMessage());
 
-        return new ResponseEntity<ErrorDetails>(apiExceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(apiExeceptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity handleApiException() {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<ErrorDetails> handleNotFoundException(NotFoundException exception) {
+        ErrorDetails apiExceptionDetails = new ErrorDetails(
+                HttpStatus.NOT_FOUND.value(),
+                exception.getMessage());
+
+        return new ResponseEntity<>(apiExceptionDetails, HttpStatus.NOT_FOUND);
     }
 
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<List<String>> handleApiException(MethodArgumentNotValidException ex) {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
         BindingResult bindingResult = ex.getBindingResult();
         List<String> erros = bindingResult.getFieldErrors()
@@ -58,8 +67,11 @@ public class RestHandlerException {
                 .map(error -> String.format("%s %s", error.getField(), error.getDefaultMessage()))
                 .toList();
 
-        return ResponseEntity
-                .badRequest()
-                .body(erros);
+        Gson gson = new Gson();
+        String jsonArray = gson.toJson(erros);
+
+        ErrorDetails methodArgumentNotValid = new ErrorDetails(HttpStatus.BAD_REQUEST.value(), jsonArray);
+
+        return new ResponseEntity<>(methodArgumentNotValid, HttpStatus.BAD_REQUEST);
     }
 }

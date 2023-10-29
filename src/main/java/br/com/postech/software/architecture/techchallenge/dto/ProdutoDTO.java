@@ -1,7 +1,6 @@
 package br.com.postech.software.architecture.techchallenge.dto;
 
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -13,13 +12,14 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.util.List;
 
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProdutoDTO {
 
-    private Integer id;
+    private Long id;
     @NotNull
     private String nome;
     @NotNull
@@ -30,6 +30,5 @@ public class ProdutoDTO {
     @NotNull
     private String descricao;
     @NotEmpty
-    private List<String> imagens;
-
+    private List<ProdutoImagesDTO> imagens;
 }
