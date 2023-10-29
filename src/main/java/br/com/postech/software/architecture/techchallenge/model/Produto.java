@@ -1,29 +1,32 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import br.com.postech.software.architecture.techchallenge.util.Constantes;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "produto")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Produto implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false, length = 100)
     private String nome;
@@ -34,8 +37,15 @@ public class Produto implements Serializable {
     @Column(nullable = false, length = 500)
     private String descricao;
 
-    @Enumerated(EnumType.STRING)
+    @Type(value = br.com.postech.software.architecture.techchallenge.enums.AssociacaoType.class,
+            parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum")})
+    @Column(name = "categoria_id")
     private CategoriaEnum categoria;
 
-    private List<String> imagens;
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<ProdutoImages> imagens;
+
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<PedidoProduto> pedidos = new ArrayList<>();
+
 }
