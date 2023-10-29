@@ -3,6 +3,7 @@ package br.com.postech.software.architecture.techchallenge.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProdutoImages implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -27,4 +29,5 @@ public class ProdutoImages implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "produto_id")
     private Produto produto;
+
 }

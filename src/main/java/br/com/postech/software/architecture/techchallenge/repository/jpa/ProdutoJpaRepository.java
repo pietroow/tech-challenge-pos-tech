@@ -1,15 +1,15 @@
 package br.com.postech.software.architecture.techchallenge.repository.jpa;
 
-import java.util.List;
-
+import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
+import br.com.postech.software.architecture.techchallenge.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
-import br.com.postech.software.architecture.techchallenge.model.Produto;
+import java.util.List;
 
 @Repository
 public interface ProdutoJpaRepository extends JpaRepository<Produto, Integer> {
 
-	List<Produto> findByCategoria(CategoriaEnum categoria);
+    List<Produto> findByCategoria(CategoriaEnum categoria);
+
 }

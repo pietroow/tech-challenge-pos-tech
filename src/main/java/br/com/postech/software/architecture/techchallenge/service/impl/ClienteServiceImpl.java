@@ -1,98 +1,87 @@
 package br.com.postech.software.architecture.techchallenge.service.impl;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.dto.ClienteDTO;
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.ClienteJpaRepository;
-import br.com.postech.software.architecture.techchallenge.service.IClientService;
+import br.com.postech.software.architecture.techchallenge.service.ClientService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-public class ClienteServiceImpl implements IClientService {
+@Transactional
+@RequiredArgsConstructor
+public class ClienteServiceImpl implements ClientService {
 
-	@Autowired
-	private ClienteJpaRepository clienteJpaRepository;
-	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
+    private final ClienteJpaRepository clienteJpaRepository;
+    private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
 
-	protected ClienteJpaRepository getPersistencia() {
-		return clienteJpaRepository;
-	}
+    @Override
+    public List<ClienteDTO> listarClientesAtivos() {
+        List<Cliente> clientesAtivos = clienteJpaRepository.findByStatus(Boolean.TRUE);
+        return clientesAtivos.stream()
+                .map(cliente -> MAPPER.map(cliente, ClienteDTO.class))
+                .collect(Collectors.toList());
+    }
 
-	@Override
-	public List<ClienteDTO> listarClientesAtivos() {
-		List<Cliente> clientesAtivos = getPersistencia().findByStatus(Boolean.TRUE);
-		return clientesAtivos.stream()
-				.map(cliente -> MAPPER.map(cliente, ClienteDTO.class))
-				.collect(Collectors.toList());
-	}
+    @Override
+    public ClienteDTO findById(Integer id) {
+        Optional<Cliente> cliente = clienteJpaRepository.findByIdAndStatus(id, Boolean.TRUE);
+        if (cliente.isPresent()) {
+            return MAPPER.map(cliente.get(), ClienteDTO.class);
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+    }
 
-	@Override
-	public ClienteDTO findById(Integer id) {
-		Optional<Cliente> cliente = getPersistencia().findByIdAndStatus(id, Boolean.TRUE);
-		if (cliente.isPresent()) {
-			return MAPPER.map(cliente.get(), ClienteDTO.class);
-		}
-		throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-	}
+    @Override
+    public ClienteDTO save(ClienteDTO clienteDTO) {
+        var cliente = MAPPER.map(clienteDTO, Cliente.class);
 
-	@Override
-	@Transactional
-	public ClienteDTO save(ClienteDTO clienteDTO) {
-		var cliente = MAPPER.map(clienteDTO, Cliente.class);
+        cliente = clienteJpaRepository.save(cliente);
 
-		cliente = getPersistencia().save(cliente);
+        return MAPPER.map(cliente, ClienteDTO.class);
+    }
 
-		return MAPPER.map(cliente, ClienteDTO.class);
-	}
+    @Override
+    public ClienteDTO atualizarCliente(Integer id, ClienteDTO clienteDTO) {
+        Cliente clienteMappado = clienteJpaRepository.findById(id)
+                .map(cliente -> {
+                            cliente.setNome(clienteDTO.getNome());
+                            cliente.setEmail(clienteDTO.getEmail());
+                            cliente.setCpf(clienteDTO.getCpf());
+                            return clienteJpaRepository.save(cliente);
+                        }
+                ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
 
-	@Override
-	@Transactional
-	public ClienteDTO atualizarCliente(Integer id, ClienteDTO clienteDTO) {
-		Optional<Cliente> clienteOptional = getPersistencia().findById(id);
+        return MAPPER.map(clienteMappado, ClienteDTO.class);
+    }
 
-		if (!clienteOptional.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-		}
-		
-		Cliente clienteExistente = clienteOptional.get();
-		clienteExistente.setNome(clienteDTO.getNome());
-		clienteExistente.setEmail(clienteDTO.getEmail());
-		clienteExistente.setCpf(clienteDTO.getCpf());
+    @Override
+    public ClienteDTO desativarCliente(Integer id) {
+        Optional<Cliente> clienteOptional = clienteJpaRepository.findById(id);
 
-		clienteExistente = getPersistencia().save(clienteExistente);
+        if (!clienteOptional.isPresent()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+        }
 
-		return MAPPER.map(clienteExistente, ClienteDTO.class);
-	}
+        Cliente cliente = clienteOptional.get();
+        cliente.setStatus(Boolean.FALSE);
+        cliente = clienteJpaRepository.save(cliente);
 
-	@Override
-	@Transactional
-	public ClienteDTO desativarCliente(Integer id) {
-		Optional<Cliente> clienteOptional = getPersistencia().findById(id);
+        return MAPPER.map(cliente, ClienteDTO.class);
+    }
 
-		if (!clienteOptional.isPresent()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
-		}
-		
-		Cliente cliente = clienteOptional.get();
-		cliente.setStatus(Boolean.FALSE);
-		cliente = getPersistencia().save(cliente);
-
-		return MAPPER.map(cliente, ClienteDTO.class);
-	}
-
-	@Override
-	public Cliente findByCpfOrNomeOrEmail(String cpf, String nome, String email) throws BusinessException {
-		return getPersistencia().findByCpfOrNomeOrEmail(cpf, nome, email);
-	}
+    @Override
+    public Cliente findByCpfOrNomeOrEmail(String cpf, String nome, String email) throws BusinessException {
+        return clienteJpaRepository.findByCpfOrNomeOrEmail(cpf, nome, email);
+    }
 }

@@ -15,14 +15,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
-import br.com.postech.software.architecture.techchallenge.service.IPedidoService;
+import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 
 @RestController
 @RequestMapping("/v1/pedidos")
 public class PedidoController {
 
 	@Autowired
-	private IPedidoService pedidoService;
+	private PedidoService pedidoService;
 	
 	@GetMapping(produces=MediaType.APPLICATION_JSON)
     public ResponseEntity<List<PedidoDTO>> listarTodosPedidosAtivos() throws Exception{

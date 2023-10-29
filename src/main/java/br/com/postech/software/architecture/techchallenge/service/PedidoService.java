@@ -5,7 +5,7 @@ import java.util.List;
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 
-public interface IPedidoService {
+public interface PedidoService {
 
 	List<PedidoDTO> findTodosPedidosAtivos() throws BusinessException;
 	

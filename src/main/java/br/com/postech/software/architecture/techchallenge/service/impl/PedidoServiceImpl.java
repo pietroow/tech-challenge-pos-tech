@@ -23,21 +23,21 @@ import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.model.Produto;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
-import br.com.postech.software.architecture.techchallenge.service.IClientService;
-import br.com.postech.software.architecture.techchallenge.service.IPedidoService;
-import br.com.postech.software.architecture.techchallenge.service.IProdutoService;
+import br.com.postech.software.architecture.techchallenge.service.ClientService;
+import br.com.postech.software.architecture.techchallenge.service.PedidoService;
+import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
 import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 
 @Service
-public class PedidoServiceImpl implements IPedidoService {
+public class PedidoServiceImpl implements PedidoService {
 	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
 	
 	@Autowired
 	private PedidoJpaRepository pedidoJpaRepository;
 	@Autowired
-	private IClientService clientService;
+	private ClientService clientService;
 	@Autowired
-	private IProdutoService produtoService;
+	private ProdutoService produtoService;
 	
 	protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
