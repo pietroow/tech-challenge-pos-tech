@@ -1,17 +1,14 @@
-#FROM postgres:latest
-#ENV POSTGRES_DB=postgresql
-#ENV POSTGRES_USER=postgres
-#ENV POSTGRES_PASSWORD=123456
-#EXPOSE 5432
-
 FROM openjdk:17
 EXPOSE 8080
 ADD out/artifacts/tech_challenge_pos_tech_jar/tech-challenge-pos-tech.jar tech-challenge-pos-tech.jar
-ENV POSTGRES_DB=postgresql
-ENV POSTGRES_USER=postgres
-ENV POSTGRES_PASSWORD=123456
 ENV JAVA_APP_ARGS="--spring.config.location=/src/main/resources/application.properties"
 ENTRYPOINT ["java","-jar","tech-challenge-pos-tech.jar", "$JAVA_APP_ARGS"]
+
+FROM postgres:latest
+ENV POSTGRES_DB=restaurante
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=password
+EXPOSE 5432
 
 #FROM ubuntu:latest
 #ARG DEBIAN_FRONTEND=noninteractive
