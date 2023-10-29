@@ -19,7 +19,6 @@ import org.springframework.util.ObjectUtils;
 import br.com.postech.software.architecture.techchallenge.util.Constantes;
 
 public class AssociacaoType implements UserType<Object>, ParameterizedType {
-
 	private Class<?> enumClass;
     private Method recreateEnumMthd;
     private Method recreateStringMthd;

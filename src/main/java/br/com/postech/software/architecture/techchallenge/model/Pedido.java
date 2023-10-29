@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -42,7 +43,7 @@ public class Pedido implements Serializable{
 	@Column(name = "status_pedido_id")
 	private StatusPedidoEnum statusPedido;
 	
-	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
-	private Set<PedidoProduto> produtos;
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<PedidoProduto> produtos = new ArrayList<PedidoProduto>();
 
 }

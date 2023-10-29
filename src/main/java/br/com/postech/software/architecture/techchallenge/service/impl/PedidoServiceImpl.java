@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -20,6 +21,7 @@ import br.com.postech.software.architecture.techchallenge.exception.BusinessExce
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
 import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.model.Pedido;
+import br.com.postech.software.architecture.techchallenge.model.Produto;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.IClientService;
 import br.com.postech.software.architecture.techchallenge.service.IPedidoService;
@@ -103,22 +105,22 @@ public class PedidoServiceImpl implements IPedidoService {
 
 	private void valideProduto(Pedido pedido)  throws BusinessException{
 		//Verifica se o está cadastrado produtos 
-//		Optional.ofNullable(pedido.getProdutos())
-//			.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
-//			.stream()
-//			.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) && 
-//								     Objects.nonNull(pedidoProduto.getProduto().getId()))
-//			.findAny()
-//			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"));
+		Optional.ofNullable(pedido.getProdutos())
+			.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
+			.stream()
+			.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) && 
+								     Objects.nonNull(pedidoProduto.getProduto().getId()))
+			.findAny()
+			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"));
 		
 		//Atribui atualiza lista de pedido_produto.
 		pedido.getProdutos()
 			.stream()
 			.distinct()
 			.forEach(pedidoProduto -> {
-					pedidoProduto.setPedido(new Pedido());					
-//					Produto produto = produtoService.findById(pedidoProduto.getProduto().getId());
-					pedidoProduto.setProduto(pedidoProduto.getProduto());
+					pedidoProduto.setPedido(pedido);					
+					Produto produto = produtoService.findById(pedidoProduto.getProduto().getId());
+					pedidoProduto.setProduto(produto);
 			});
 	}
 

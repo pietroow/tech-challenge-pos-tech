@@ -2,13 +2,10 @@ package br.com.postech.software.architecture.techchallenge.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.NaturalId;
-import org.hibernate.annotations.NaturalIdCache;
 import org.hibernate.annotations.Parameter;
 
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
@@ -29,10 +26,6 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "produto")
-@NaturalIdCache
-@Cache(
-    usage = CacheConcurrencyStrategy.READ_WRITE
-)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -44,7 +37,6 @@ public class Produto implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	@NaturalId
 	@Column(nullable = false, length = 100)
 	private String nome;
 
@@ -61,5 +53,8 @@ public class Produto implements Serializable{
 	
 	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<ProdutoImages> imagens;
+	
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+	private List<PedidoProduto> pedidos = new ArrayList<PedidoProduto>();
 
 }

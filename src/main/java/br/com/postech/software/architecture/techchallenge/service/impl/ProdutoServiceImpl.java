@@ -2,6 +2,7 @@ package br.com.postech.software.architecture.techchallenge.service.impl;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.dto.ProdutoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
+import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
 import br.com.postech.software.architecture.techchallenge.model.Produto;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.ProdutoJpaRepository;
@@ -65,6 +67,7 @@ public class ProdutoServiceImpl implements IProdutoService {
     public ProdutoDTO save(ProdutoDTO produtoDTO) {
         var produto = MAPPER.map(produtoDTO, Produto.class);
 
+        validateImagesProduto(produto);
         produto = getPersistencia().save(produto);
 
         return MAPPER.map(produto, ProdutoDTO.class);
@@ -74,5 +77,13 @@ public class ProdutoServiceImpl implements IProdutoService {
     @Transactional
     public void deleteById(Integer id) {
     	getPersistencia().deleteById(id);
+    }
+    
+    private void validateImagesProduto(Produto produto) {
+    	Optional.ofNullable(produto.getImagens())
+		.orElseThrow(() -> new BusinessException("É obrigatório informar pelo menos uma imgem para o produto!"))
+		.stream()
+		.filter(img -> Objects.isNull(img.getProduto()))
+		.forEach(img -> {img.setProduto(produto);});
     }
 }

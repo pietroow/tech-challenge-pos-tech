@@ -3,8 +3,8 @@ package br.com.postech.software.architecture.techchallenge.dto;
 import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,12 +18,12 @@ public class ClienteDTO {
 
 	private Long id;
 	private String nome;
-	@Email
+	@Email(message = "Email inválido, digite novamente", regexp = ".+[@].+[\\.].+")
 	private String email;
-	@CPF
+	@CPF(message="CPF inválido, digite novamente")
 	private String cpf;
-	@Min(6)
-	private String senha;
+	@Size(min = 6, max = 20)
 	@NotNull
-	private char status;
+	private String senha;
+	private Boolean status;
 }
