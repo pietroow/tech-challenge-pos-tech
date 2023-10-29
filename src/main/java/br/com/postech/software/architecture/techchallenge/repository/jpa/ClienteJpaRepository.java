@@ -13,11 +13,11 @@ public interface ClienteJpaRepository extends JpaRepository<Cliente, Integer> {
 
     List<Cliente> findAll();
 
-    Optional<Cliente> findByIdAndStatus(Integer id, char status);
+    Optional<Cliente> findByIdAndStatus(Integer id, Boolean status);
 
     Optional<Cliente> findById(Integer id);
     
-    List<Cliente> findByStatus(char c);
+    List<Cliente> findByStatus(Boolean c);
     
     Cliente findByCpfOrNomeOrEmail(String cpf, String nome, String email) throws PersistenceException;
 }

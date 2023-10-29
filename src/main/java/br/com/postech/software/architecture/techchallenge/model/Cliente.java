@@ -1,14 +1,22 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+
+import org.hibernate.type.TrueFalseConverter;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "cliente")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Cliente implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -28,6 +36,8 @@ public class Cliente implements Serializable{
 	@Column(nullable = true,length = 255)
 	private String senha;
 
-	@Column(nullable = false, length = 1)
-	private char status;
+	@Convert(converter = TrueFalseConverter.class)
+	@Column(nullable = false)
+	private boolean status;
+
 }

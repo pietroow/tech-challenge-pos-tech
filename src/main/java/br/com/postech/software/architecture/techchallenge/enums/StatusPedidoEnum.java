@@ -35,5 +35,14 @@ public enum StatusPedidoEnum implements APIEnum{
 			}
 		}
 		return StatusPedidoEnum.DESCONHECIDO;
-	}		
+	}
+	
+	public static StatusPedidoEnum getByDescricao(String descricao) {
+		for (StatusPedidoEnum status : StatusPedidoEnum.values()) {
+			if(status.getDescricao().equals(descricao)) {
+				return status;
+			}
+		}
+		return StatusPedidoEnum.DESCONHECIDO;
+	}
 }

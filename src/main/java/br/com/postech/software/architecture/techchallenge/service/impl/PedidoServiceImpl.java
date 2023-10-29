@@ -4,9 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
+import br.com.postech.software.architecture.techchallenge.configuration.StatusPedidoParaInteiroConverter;
+import br.com.postech.software.architecture.techchallenge.configuration.InteiroParaStatusPedidoConverter;
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
@@ -23,6 +23,7 @@ import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.IClientService;
 import br.com.postech.software.architecture.techchallenge.service.IPedidoService;
+import br.com.postech.software.architecture.techchallenge.service.IProdutoService;
 import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 
 @Service
@@ -33,6 +34,8 @@ public class PedidoServiceImpl implements IPedidoService {
 	private PedidoJpaRepository pedidoJpaRepository;
 	@Autowired
 	private IClientService clientService;
+	@Autowired
+	private IProdutoService produtoService;
 	
 	protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
@@ -46,10 +49,15 @@ public class PedidoServiceImpl implements IPedidoService {
 								StatusPedidoEnum.CONCLUIDO, 
 								StatusPedidoEnum.CANCELADO)
 				);
-		
-		MAPPER.typeMap(Pedido.class, PedidoDTO.class).addMappings(mapper -> {
+
+		MAPPER.typeMap(Pedido.class, PedidoDTO.class)
+		.addMappings(mapperA -> mapperA
+				.using(new StatusPedidoParaInteiroConverter())
+					.map(Pedido::getStatusPedido, PedidoDTO::setStatusPedido))
+		.addMappings(mapper -> {
 			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 		});
+		
 		return MAPPER.map(pedidos, new TypeToken<List<PedidoDTO>>() {}.getType());
 	}
 
@@ -65,18 +73,28 @@ public class PedidoServiceImpl implements IPedidoService {
 	@Override
 	@Transactional
 	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
-		//Obtem os dados do pedido
+		//Obtem os dados do pedido		
+		MAPPER.typeMap(PedidoDTO.class, Pedido.class)
+			.addMappings(mapperA -> mapperA
+					.using(new InteiroParaStatusPedidoConverter())
+						.map(PedidoDTO::getStatusPedido, Pedido::setStatusPedido));
+
 		Pedido pedido = MAPPER.map(pedidoDTO, Pedido.class);
 		pedido.setDataPedido(LocalDateTime.now());
 		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
-		
+				
 		valideCliente(pedido);	
 		
 		valideProduto(pedido);
 		
 		//Salva o pedido e obtem seu numero
-		pedido = getPersistencia().saveAndFlush(pedido);
-		MAPPER.typeMap(Pedido.class, PedidoDTO.class).addMappings(mapper -> {
+		pedido = getPersistencia().save(pedido);	
+		
+		MAPPER.typeMap(Pedido.class, PedidoDTO.class)
+		.addMappings(mapperA -> mapperA
+				.using(new StatusPedidoParaInteiroConverter())
+					.map(Pedido::getStatusPedido, PedidoDTO::setStatusPedido))
+		.addMappings(mapper -> {
 			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 		});
 		
@@ -84,14 +102,24 @@ public class PedidoServiceImpl implements IPedidoService {
 	}
 
 	private void valideProduto(Pedido pedido)  throws BusinessException{
-		//Verifica se as imagens dos produtos 
-		Optional.ofNullable(pedido.getProdutos())
-			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"))
+		//Verifica se o está cadastrado produtos 
+//		Optional.ofNullable(pedido.getProdutos())
+//			.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
+//			.stream()
+//			.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) && 
+//								     Objects.nonNull(pedidoProduto.getProduto().getId()))
+//			.findAny()
+//			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"));
+		
+		//Atribui atualiza lista de pedido_produto.
+		pedido.getProdutos()
 			.stream()
-			.flatMap(produto -> produto.getImagens().stream())
-			.findAny()
-			.filter(img -> StringUtils.isNotBlank(img.getPath()))
-			.orElseThrow(() -> new BusinessException("Imagem do produto é obrigatória!"));
+			.distinct()
+			.forEach(pedidoProduto -> {
+					pedidoProduto.setPedido(new Pedido());					
+//					Produto produto = produtoService.findById(pedidoProduto.getProduto().getId());
+					pedidoProduto.setProduto(pedidoProduto.getProduto());
+			});
 	}
 
 	private void valideCliente(Pedido pedido) throws BusinessException{
@@ -109,4 +137,5 @@ public class PedidoServiceImpl implements IPedidoService {
 			pedido.setCliente(cliente);
 		}
 	}
+
 }

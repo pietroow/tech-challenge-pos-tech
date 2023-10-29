@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ProdutoDTO {
 
-    private Integer id;
+    private Long id;
     @NotNull
     private String nome;
     @NotNull

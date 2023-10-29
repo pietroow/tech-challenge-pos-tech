@@ -9,12 +9,10 @@ import lombok.Data;
 public class PedidoDTO {
 
 	private Long numeroPedido;
-    private String nomeCliente;
-    private String emailCliente;
-    private String cpfCliente;
-    private String senhaCliente;
+    private ClienteDTO cliente;
     private String dataPedido;
+    private Integer statusPedido;
     @NotEmpty
-    private List<ProdutoDTO> produtos;
+    private List<PedidoProdutoDTO> produtos;
 
 }

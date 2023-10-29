@@ -1,10 +1,13 @@
 package br.com.postech.software.architecture.techchallenge.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -16,6 +19,9 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "pedido")
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Pedido implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -27,13 +33,7 @@ public class Pedido implements Serializable{
 	@ManyToOne
 	@JoinColumn(name = "cliente_id")
 	private Cliente cliente;
-
-	@ManyToMany(cascade=CascadeType.ALL)
-	@JoinTable(name = "pedido_produto",
-			joinColumns = @JoinColumn(name = "pedido_id"),
-			inverseJoinColumns = @JoinColumn(name = "produto_id"))
-	private List<Produto> produtos;
-
+	
 	@Column(name = "data_pedido", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 	private LocalDateTime dataPedido;
 	
@@ -41,4 +41,8 @@ public class Pedido implements Serializable{
 	        parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "StatusPedidoEnum")})
 	@Column(name = "status_pedido_id")
 	private StatusPedidoEnum statusPedido;
+	
+	@OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+	private Set<PedidoProduto> produtos;
+
 }

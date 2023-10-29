@@ -50,6 +50,15 @@ public class ProdutoServiceImpl implements IProdutoService {
         return MAPPER.map(produto, ProdutoDTO.class);
 
     }
+    
+    @Override
+    public Produto findById(Long id) {
+        Produto produto = getPersistencia()
+                .findById(id.intValue())
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado."));
+
+        return produto;
+    }
 
     @Override
     @Transactional

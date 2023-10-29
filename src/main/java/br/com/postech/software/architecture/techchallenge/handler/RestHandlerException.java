@@ -20,6 +20,8 @@ public class RestHandlerException extends ResponseEntityExceptionHandler {
 				HttpStatus.INTERNAL_SERVER_ERROR.value(),
 				exception.getMessage());
 		
+		System.out.println(exception.getMessage());
+		
 		return new ResponseEntity<ErrorDetails>(execptionDetails, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	

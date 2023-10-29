@@ -5,6 +5,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.NaturalId;
+import org.hibernate.annotations.NaturalIdCache;
 import org.hibernate.annotations.Parameter;
 
 import br.com.postech.software.architecture.techchallenge.enums.CategoriaEnum;
@@ -12,16 +16,27 @@ import br.com.postech.software.architecture.techchallenge.util.Constantes;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "produto")
+@NaturalIdCache
+@Cache(
+    usage = CacheConcurrencyStrategy.READ_WRITE
+)
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Produto implements Serializable{
 	private static final long serialVersionUID = 1L;
 
@@ -29,6 +44,7 @@ public class Produto implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
+	@NaturalId
 	@Column(nullable = false, length = 100)
 	private String nome;
 
@@ -43,7 +59,7 @@ public class Produto implements Serializable{
 	@Column(name = "categoria_id")
 	private CategoriaEnum categoria;
 	
-	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	private List<ProdutoImages> imagens;
-	
+
 }
