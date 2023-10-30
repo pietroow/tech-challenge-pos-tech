@@ -6,7 +6,7 @@ COPY src/ /app/src
 RUN mvn clean install -DskipTests
 
 
-FROM openjdk:17
+FROM openjdk:17-alpine
 EXPOSE 8080
 COPY --from=build /app/target/tech-challenge-pos-tech-0.0.1-SNAPSHOT.jar tech-challenge-pos-tech.jar
 ENV JAVA_APP_ARGS="--spring.config.location=/src/main/resources/application.properties"
