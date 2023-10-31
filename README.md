@@ -67,17 +67,13 @@ A aplicação utiliza um banco de dados PostgreSQL para armazenar dados relacion
 <h3>Configuração e Execução</h3>
 Clone o repositório para sua máquina local.
 
-Certifique-se de ter o PostgreSQL instalado e configurado.
+Certifique-se de ter o Docker instalado e configurado.
 
-Configure as variáveis de ambiente no arquivo .env com as informações do banco de dados.
+Execute o comando:
+    docker compose up -d
 
-Execute os seguintes comandos para instalar as dependências e iniciar o servidor:
+com isso o aplicativo e o banco de dados são executados. O aplicativo responde na porta 8080 e o banco na porta 5432
 
-sql
-Copy code
-npm install
-npm start
-A aplicação estará disponível em http://localhost:3000.
 
 Estrutura do Projeto
 O projeto segue a arquitetura hexagonal, com uma separação clara entre os domínios, os adaptadores (para APIs externas, como o banco de dados) e as portas (interfaces para as camadas externas).
