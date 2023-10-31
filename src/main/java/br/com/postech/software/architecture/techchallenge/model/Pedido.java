@@ -41,7 +41,7 @@ public class Pedido implements Serializable {
     @Column(name = "status_pedido_id")
     private StatusPedidoEnum statusPedido;
 
-    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PedidoProduto> produtos = new ArrayList<>();
 
 }
