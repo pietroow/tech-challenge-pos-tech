@@ -31,14 +31,14 @@ import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 @Service
 public class PedidoServiceImpl implements PedidoService {
 	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
-	
+
 	@Autowired
 	private PedidoJpaRepository pedidoJpaRepository;
 	@Autowired
 	private ClientService clientService;
 	@Autowired
 	private ProdutoService produtoService;
-	
+
 	protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
 	}
@@ -48,7 +48,7 @@ public class PedidoServiceImpl implements PedidoService {
 		List<Pedido> pedidos = getPersistencia()
 				.findByStatusPedidoNotIn(
 						Arrays.asList(
-								StatusPedidoEnum.CONCLUIDO, 
+								StatusPedidoEnum.CONCLUIDO,
 								StatusPedidoEnum.CANCELADO)
 				);
 
@@ -59,7 +59,7 @@ public class PedidoServiceImpl implements PedidoService {
 		.addMappings(mapper -> {
 			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 		});
-		
+
 		return MAPPER.map(pedidos, new TypeToken<List<PedidoDTO>>() {}.getType());
 	}
 
@@ -68,14 +68,14 @@ public class PedidoServiceImpl implements PedidoService {
 		Pedido pedido = getPersistencia()
 				.findById(id)
 				.orElseThrow(() -> new NotFoundException("Pedido não encontrado!"));
-		
+
 		return MAPPER.map(pedido, PedidoDTO.class);
 	}
 
 	@Override
 	@Transactional
 	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
-		//Obtem os dados do pedido		
+		//Obtem os dados do pedido
 		MAPPER.typeMap(PedidoDTO.class, Pedido.class)
 			.addMappings(mapperA -> mapperA
 					.using(new InteiroParaStatusPedidoConverter())
@@ -84,14 +84,14 @@ public class PedidoServiceImpl implements PedidoService {
 		Pedido pedido = MAPPER.map(pedidoDTO, Pedido.class);
 		pedido.setDataPedido(LocalDateTime.now());
 		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
-				
-		valideCliente(pedido);	
-		
+
+		valideCliente(pedido);
+
 		valideProduto(pedido);
-		
+
 		//Salva o pedido e obtem seu numero
-		pedido = getPersistencia().save(pedido);	
-		
+		pedido = getPersistencia().save(pedido);
+
 		MAPPER.typeMap(Pedido.class, PedidoDTO.class)
 		.addMappings(mapperA -> mapperA
 				.using(new StatusPedidoParaInteiroConverter())
@@ -99,26 +99,26 @@ public class PedidoServiceImpl implements PedidoService {
 		.addMappings(mapper -> {
 			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 		});
-		
+
 		return MAPPER.map(pedido, PedidoDTO.class);
 	}
 
 	private void valideProduto(Pedido pedido)  throws BusinessException{
-		//Verifica se o está cadastrado produtos 
+		//Verifica se o está cadastrado produtos
 		Optional.ofNullable(pedido.getProdutos())
 			.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
 			.stream()
-			.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) && 
+			.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) &&
 								     Objects.nonNull(pedidoProduto.getProduto().getId()))
 			.findAny()
 			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"));
-		
+
 		//Atribui atualiza lista de pedido_produto.
 		pedido.getProdutos()
 			.stream()
 			.distinct()
 			.forEach(pedidoProduto -> {
-					pedidoProduto.setPedido(pedido);					
+					pedidoProduto.setPedido(pedido);
 					Produto produto = produtoService.findProdutoById(pedidoProduto.getProduto().getId());
 					pedidoProduto.setProduto(produto);
 			});
@@ -128,14 +128,14 @@ public class PedidoServiceImpl implements PedidoService {
 		//Caso informe dados do cliente, é obrigatorio o cliente existir
 		if(Objects.nonNull(pedido.getCliente())) {
 			pedido.getCliente().setCpf(CpfCnpjUtil.removeMaskCPFCNPJ(pedido.getCliente().getCpf()));
-			
+
 			Cliente cliente = clientService.findByCpfOrNomeOrEmail(pedido.getCliente().getCpf(),
 					pedido.getCliente().getNome(), pedido.getCliente().getEmail());
-			
-			if(Objects.nonNull(pedido.getCliente())) {
+
+			if(Objects.isNull(pedido.getCliente())) {
 				throw new BusinessException("Cliente não encontrado!");
 			}
-			
+
 			pedido.setCliente(cliente);
 		}
 	}
