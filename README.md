@@ -1,6 +1,6 @@
 <h1 align="center">Tech Challenge Fase 1 - Turma 4SOAT - Grupo 17</h1>
 Este projeto é uma aplicação backend construída com uma arquitetura hexagonal (também conhecida como arquitetura porta e adaptador). 
-A aplicação utiliza um banco de dados PostgreSQL para armazenar dados relacionados a clientes, produtos, pedidos e pagamentos. O sistema inclui as seguintes APIs:
+A aplicação utiliza um banco de dados PostgreSQL para armazenar dados relacionados a clientes, produtos e pedidos.
 
 <h3>Configuração e Execução</h3>
 Clone o repositório para sua máquina local.
