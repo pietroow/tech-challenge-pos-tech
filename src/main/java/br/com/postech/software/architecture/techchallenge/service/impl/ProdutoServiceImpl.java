@@ -59,7 +59,6 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    @Transactional
     public ProdutoDTO save(ProdutoDTO produtoDTO) {
         var produto = MAPPER.map(produtoDTO, Produto.class);
 
@@ -71,7 +70,6 @@ public class ProdutoServiceImpl implements ProdutoService {
 
 
     @Override
-    @Transactional
     public ProdutoDTO atualizar(ProdutoDTO produtoDTO) {
         var produto = MAPPER.map(produtoDTO, Produto.class);
         validateImagesProduto(produto);
@@ -85,7 +83,6 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    @Transactional
     public void deleteById(Long id) {
         produtoJpaRepository.deleteById(id);
     }

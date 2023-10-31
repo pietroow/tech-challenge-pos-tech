@@ -132,7 +132,7 @@ public class PedidoServiceImpl implements PedidoService {
 			Cliente cliente = clientService.findByCpfOrNomeOrEmail(pedido.getCliente().getCpf(),
 					pedido.getCliente().getNome(), pedido.getCliente().getEmail());
 
-			if(Objects.isNull(pedido.getCliente())) {
+			if(Objects.isNull(cliente)) {
 				throw new BusinessException("Cliente não encontrado!");
 			}
 

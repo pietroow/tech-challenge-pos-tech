@@ -42,10 +42,10 @@ public class Produto implements Serializable {
     @Column(name = "categoria_id")
     private CategoriaEnum categoria;
 
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProdutoImages> imagens;
 
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PedidoProduto> pedidos = new ArrayList<>();
 
 }
