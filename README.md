@@ -11,7 +11,6 @@ Execute o comando: ``` docker compose up -d ``` para subir a aplicação com o b
 
 As APIs da aplicação ficam acessíveis no endereço ``` http://localhost:8080 ```
 
- O aplicativo responde na porta 8080 e o banco na porta 5432
 
 ## APIs Disponíveis
 
