@@ -37,7 +37,7 @@ public class ProdutoController {
 
     @PutMapping
     public ResponseEntity<ProdutoDTO> atualizar(@RequestBody @Valid ProdutoDTO produtoDTO) {
-        return ResponseEntity.ok(produtoService.save(produtoDTO));
+        return ResponseEntity.ok(produtoService.atualizar(produtoDTO));
     }
 
     @GetMapping

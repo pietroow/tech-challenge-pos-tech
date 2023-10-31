@@ -68,24 +68,21 @@ public class ProdutoServiceImpl implements ProdutoService {
 
         return MAPPER.map(produto, ProdutoDTO.class);
     }
-    
 
-	@Override
-	public ProdutoDTO atualizar(ProdutoDTO produtoDTO) {
-		var produtoMapper = MAPPER.map(produtoDTO, Produto.class);
-		Produto produto = produtoJpaRepository.findById(produtoDTO.getId())
-                .map(prd -> {
-                			prd.setNome(produtoMapper.getNome());
-                			prd.setValor(produtoMapper.getValor());
-                			prd.setDescricao(produtoMapper.getDescricao());
-                			prd.setCategoria(produtoMapper.getCategoria());
-                			prd.setImagens(produtoMapper.getImagens());
-                            return produtoJpaRepository.save(prd);
-                        }
-                ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
-		
-		return MAPPER.map(produto, ProdutoDTO.class);
-	}
+
+    @Override
+    @Transactional
+    public ProdutoDTO atualizar(ProdutoDTO produtoDTO) {
+        var produto = MAPPER.map(produtoDTO, Produto.class);
+        validateImagesProduto(produto);
+
+        produtoJpaRepository.findById(produtoDTO.getId()).
+                orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+
+        produto = produtoJpaRepository.save(produto);
+
+        return MAPPER.map(produto, ProdutoDTO.class);
+    }
 
     @Override
     @Transactional
