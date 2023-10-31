@@ -16,8 +16,8 @@ As APIs da aplicação ficam acessíveis no endereço ``` http://localhost:8080 
 
 As APIs disponíveis são: <br />
 **1. Criação, Edição e Busca do Cliente** <br />
-**3. Criação, Edição, Remoção e Busca de Produto**<br />
-**4. Busca de Produtos por Categoria**<br />
-**5. Criação de pedidos sem identificação do cliente, pedido com o cliente e Busca de Pedidos**<br />
+**2. Criação, Edição, Remoção e Busca de Produto**<br />
+**3. Busca de Produtos por Categoria**<br />
+**4. Criação de pedidos sem identificação do cliente, pedido com o cliente e Busca de Pedidos**<br />
 
 Para utilizar as APIs importe o arquivo: https://github.com/pietroow/tech-challenge-pos-tech/blob/main/Tech-challenge.postman_collection.json no postman
