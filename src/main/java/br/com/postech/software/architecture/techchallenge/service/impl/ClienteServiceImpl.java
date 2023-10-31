@@ -6,6 +6,7 @@ import br.com.postech.software.architecture.techchallenge.exception.BusinessExce
 import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.ClienteJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.ClientService;
+import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,7 +47,11 @@ public class ClienteServiceImpl implements ClientService {
     @Override
     public ClienteDTO save(ClienteDTO clienteDTO) {
         var cliente = MAPPER.map(clienteDTO, Cliente.class);
-
+        
+        if(Objects.nonNull(cliente.getCpf())) {
+        	cliente.setCpf(CpfCnpjUtil.removeMaskCPFCNPJ(cliente.getCpf()));
+        }
+        
         cliente = clienteJpaRepository.save(cliente);
 
         return MAPPER.map(cliente, ClienteDTO.class);

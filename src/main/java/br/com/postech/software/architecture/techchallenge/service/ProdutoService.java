@@ -10,12 +10,14 @@ public interface ProdutoService {
 
     List<ProdutoDTO> findAll(CategoriaEnum categoria);
 
-    ProdutoDTO findById(Integer id);
+    ProdutoDTO findById(Long id);
 
-    Produto findById(Long id);
+    Produto findProdutoById(Long id);
 
     ProdutoDTO save(ProdutoDTO produtoDTO);
 
-    void deleteById(Integer id);
+    ProdutoDTO atualizar(ProdutoDTO produtoDTO);
+    
+    void deleteById(Long id);
 
 }

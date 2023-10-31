@@ -11,8 +11,10 @@ import br.com.postech.software.architecture.techchallenge.service.ProdutoService
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -40,7 +42,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public ProdutoDTO findById(Integer id) {
+    public ProdutoDTO findById(Long id) {
         Produto produto = produtoJpaRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado."));
@@ -50,9 +52,9 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public Produto findById(Long id) {
+    public Produto findProdutoById(Long id) {
         return produtoJpaRepository
-                .findById(id.intValue())
+                .findById(id)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado."));
     }
 
@@ -66,10 +68,28 @@ public class ProdutoServiceImpl implements ProdutoService {
 
         return MAPPER.map(produto, ProdutoDTO.class);
     }
+    
+
+	@Override
+	public ProdutoDTO atualizar(ProdutoDTO produtoDTO) {
+		var produtoMapper = MAPPER.map(produtoDTO, Produto.class);
+		Produto produto = produtoJpaRepository.findById(produtoDTO.getId())
+                .map(prd -> {
+                			prd.setNome(produtoMapper.getNome());
+                			prd.setValor(produtoMapper.getValor());
+                			prd.setDescricao(produtoMapper.getDescricao());
+                			prd.setCategoria(produtoMapper.getCategoria());
+                			prd.setImagens(produtoMapper.getImagens());
+                            return produtoJpaRepository.save(prd);
+                        }
+                ).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Produto não encontrado!"));
+		
+		return MAPPER.map(produto, ProdutoDTO.class);
+	}
 
     @Override
     @Transactional
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         produtoJpaRepository.deleteById(id);
     }
 

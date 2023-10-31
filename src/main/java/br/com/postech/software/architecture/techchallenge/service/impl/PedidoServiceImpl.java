@@ -119,7 +119,7 @@ public class PedidoServiceImpl implements PedidoService {
 			.distinct()
 			.forEach(pedidoProduto -> {
 					pedidoProduto.setPedido(pedido);					
-					Produto produto = produtoService.findById(pedidoProduto.getProduto().getId());
+					Produto produto = produtoService.findProdutoById(pedidoProduto.getProduto().getId());
 					pedidoProduto.setProduto(produto);
 			});
 	}

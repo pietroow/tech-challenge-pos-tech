@@ -30,7 +30,7 @@ public class ProdutoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteById(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
         this.produtoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
@@ -46,7 +46,7 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProdutoDTO> buscarProdutoPorId(@PathVariable Integer id) {
+    public ResponseEntity<ProdutoDTO> buscarProdutoPorId(@PathVariable Long id) {
         return new ResponseEntity<>(produtoService.findById(id), HttpStatus.OK);
     }
 
