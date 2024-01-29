@@ -9,3 +9,8 @@ INSERT INTO status_pedido (id, nome) VALUES (3, 'Confirmado') ON CONFLICT DO NOT
 INSERT INTO status_pedido (id, nome) VALUES (4, 'Em preparação') ON CONFLICT DO NOTHING;
 INSERT INTO status_pedido (id, nome) VALUES (5, 'Concluído') ON CONFLICT DO NOTHING;
 INSERT INTO status_pedido (id, nome) VALUES (6, 'Cancelado') ON CONFLICT DO NOTHING;
+
+INSERT INTO status_pagamento (id, nome) VALUES (0, 'Desconhecido') ON CONFLICT DO NOTHING;
+INSERT INTO status_pagamento (id, nome) VALUES (1, 'Aprovado') ON CONFLICT DO NOTHING;
+INSERT INTO status_pagamento (id, nome) VALUES (2, 'Pendente') ON CONFLICT DO NOTHING;
+INSERT INTO status_pagamento (id, nome) VALUES (3, 'Reprovado') ON CONFLICT DO NOTHING;

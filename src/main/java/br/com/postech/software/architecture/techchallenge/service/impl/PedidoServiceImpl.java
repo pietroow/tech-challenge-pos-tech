@@ -24,6 +24,7 @@ import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.model.Produto;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.ClientService;
+import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
 import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
@@ -38,6 +39,8 @@ public class PedidoServiceImpl implements PedidoService {
 	private ClientService clientService;
 	@Autowired
 	private ProdutoService produtoService;
+	@Autowired
+	private PagamentoService pagamentoService;
 
 	protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
@@ -74,7 +77,7 @@ public class PedidoServiceImpl implements PedidoService {
 
 	@Override
 	@Transactional
-	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
+	public Long fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
 		//Obtem os dados do pedido
 		MAPPER.typeMap(PedidoDTO.class, Pedido.class)
 			.addMappings(mapperA -> mapperA
@@ -100,7 +103,8 @@ public class PedidoServiceImpl implements PedidoService {
 			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 		});
 
-		return MAPPER.map(pedido, PedidoDTO.class);
+		//return MAPPER.map(pedido, PedidoDTO.class);
+		return pedido.getId();
 	}
 
 	private void valideProduto(Pedido pedido)  throws BusinessException{

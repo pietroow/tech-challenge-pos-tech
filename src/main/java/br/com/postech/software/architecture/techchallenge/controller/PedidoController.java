@@ -1,6 +1,7 @@
 package br.com.postech.software.architecture.techchallenge.controller;
 
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
+import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,8 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
+    @Autowired
+    private PagamentoService pagamentoService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<List<PedidoDTO>> listarTodosPedidosAtivos() throws Exception {
@@ -33,7 +36,9 @@ public class PedidoController {
     }
 
     @PostMapping(path = "/checkout", produces = MediaType.APPLICATION_JSON)
-    public ResponseEntity<PedidoDTO> fazerCheckoutFake(@RequestBody PedidoDTO pedidoDTO) throws Exception {
-        return new ResponseEntity<PedidoDTO>(pedidoService.fazerPedidoFake(pedidoDTO), HttpStatus.CREATED);
+    public ResponseEntity<Long> fazerCheckoutFake(@RequestBody PedidoDTO pedidoDTO) throws Exception {
+        Long idPedido = pedidoService.fazerPedidoFake(pedidoDTO);
+        pagamentoService.salvarComIdPedido(idPedido);
+        return new ResponseEntity<Long>(idPedido, HttpStatus.CREATED);
     }
 }
