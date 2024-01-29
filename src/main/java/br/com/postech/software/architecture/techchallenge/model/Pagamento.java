@@ -31,6 +31,9 @@ public class Pagamento implements Serializable {
     @Column(name = "pedido_id")
     private Long idPedido;
 
+    @Column(name = "qr_code")
+    private String qrCode;
+
     @Column(name = "data_pagamento", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime dataPagamento;
 

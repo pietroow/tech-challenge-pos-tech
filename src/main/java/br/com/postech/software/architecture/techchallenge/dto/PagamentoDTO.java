@@ -10,5 +10,7 @@ public class PagamentoDTO {
     private Long id;
     private Long idPedido;
     private LocalDateTime dataPagamento;
-    private String statusPagamento;
+    private Integer statusPagamento;
+    private String qrCode;
+    private String descricaoStatusPagamento;
 }
