@@ -3,48 +3,42 @@ package br.com.postech.software.architecture.techchallenge.service.impl;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.google.common.base.Optional;
+
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.dto.PagamentoDTO;
-import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
-import br.com.postech.software.architecture.techchallenge.enums.StatusPagamentoEnum;
-import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
-import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
+import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
+import br.com.postech.software.architecture.techchallenge.model.Pagamento;
+import br.com.postech.software.architecture.techchallenge.repository.jpa.PagamentoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
-import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 
 @Service
 public class PagamentoServiceImpl implements PagamentoService {
+
 	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
 
 	@Autowired
-	private PedidoJpaRepository pedidoJpaRepository;
-	@Autowired
-	private PedidoService pedidoService;
+	private PagamentoJpaRepository pagamentoJpaRepository;
 
-	protected PedidoJpaRepository getPersistencia() {
-		return pedidoJpaRepository;
+	protected PagamentoJpaRepository getPersistencia() {
+		return pagamentoJpaRepository;
+	}
+
+	public Pagamento findByIdPedido(Integer idPedido){
+		Optional<Pagamento> optPagamento = pagamentoJpaRepository.findByPedidoId(idPedido);
+		if(optPagamento.isPresent()){
+			return optPagamento.get();
+		}
+		throw new NotFoundException("Pagamento não encontrado.");
 	}
 
 	@Override
 	public PagamentoDTO obterStatusPagamento(Integer idPedido) {
 		
-		PedidoDTO pedido = pedidoService.findById(idPedido);
-		PagamentoDTO pagamentoDTO = new PagamentoDTO();
-		
-		if(pedido.getStatusPedido() >= StatusPedidoEnum.CONFIRMADO.getValue()){
-			pagamentoDTO.setPedido(pedido);
-			pagamentoDTO.setStatusPagamento(StatusPagamentoEnum.APROVADO.getDescricao());
-		}
-		else if(pedido.getStatusPedido() == StatusPedidoEnum.PENDENTE.getValue()
-			|| pedido.getStatusPedido() == StatusPedidoEnum.REALIZADO.getValue()){
-				pagamentoDTO.setPedido(pedido);
-				pagamentoDTO.setStatusPagamento(StatusPagamentoEnum.PENDENTE.getDescricao());
-		}
-		else{
-			pagamentoDTO.setPedido(pedido);
-			pagamentoDTO.setStatusPagamento(StatusPagamentoEnum.DESCONHECIDO.getDescricao());
-		}
-		
+		Pagamento pagamento = findByIdPedido(idPedido);
+		PagamentoDTO pagamentoDTO = MAPPER.map(pagamento, PagamentoDTO.class);
+		pagamentoDTO.setStatusPagamento(pagamento.getStatusPagamento().getDescricao());
 		return pagamentoDTO;
 	}
 }
