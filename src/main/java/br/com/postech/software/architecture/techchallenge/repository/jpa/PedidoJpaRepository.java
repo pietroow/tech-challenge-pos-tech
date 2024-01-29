@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.google.common.base.Optional;
-
 import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
 import br.com.postech.software.architecture.techchallenge.exception.PersistenceException;
 import br.com.postech.software.architecture.techchallenge.model.Pedido;
