@@ -24,6 +24,7 @@ import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.model.Produto;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.ClientService;
+import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
 import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
@@ -38,6 +39,8 @@ public class PedidoServiceImpl implements PedidoService {
 	private ClientService clientService;
 	@Autowired
 	private ProdutoService produtoService;
+	@Autowired
+	private PagamentoService pagamentoService;
 
 	protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;

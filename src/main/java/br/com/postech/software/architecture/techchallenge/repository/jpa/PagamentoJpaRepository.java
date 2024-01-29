@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.google.common.base.Optional;
 
 @Repository
-public interface PagamentoJpaRepository extends JpaRepository<Pagamento, Integer> {
+public interface PagamentoJpaRepository extends JpaRepository<Pagamento, Long> {
 
-    Optional<Pagamento> findByPedidoId(Integer idPedido);
+    Optional<Pagamento> findByPedidoId(Long idPedido);
 }

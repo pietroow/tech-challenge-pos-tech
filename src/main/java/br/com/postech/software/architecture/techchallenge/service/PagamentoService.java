@@ -4,9 +4,11 @@ import br.com.postech.software.architecture.techchallenge.dto.PagamentoDTO;
 
 public interface PagamentoService {
 
-	PagamentoDTO findByIdPedido(Integer idPedido);
+	void salvarComIdPedido(Long idPedido);
 
-	PagamentoDTO obterStatusPagamento(Integer idPedido);
+	PagamentoDTO findByIdPedido(Long idPedido);
 
-	String gerarCodigoQRPagamento(Integer idPedido) throws Exception;
+	PagamentoDTO obterStatusPagamento(Long idPedido);
+
+	String gerarCodigoQRPagamento(Long idPedido) throws Exception;
 }

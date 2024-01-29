@@ -41,4 +41,10 @@ public class Pagamento implements Serializable {
             parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "StatusPagamentoEnum")})
     @Column(name = "status_pedido_id")
     private StatusPagamentoEnum statusPagamento;
+
+    public Pagamento(Long idPedido) {
+        this.idPedido = idPedido;
+        this.dataPagamento = LocalDateTime.now();
+		this.statusPagamento = StatusPagamentoEnum.PENDENTE;
+    }
 }

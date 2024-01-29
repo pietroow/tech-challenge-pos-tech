@@ -14,14 +14,19 @@ import br.com.postech.software.architecture.techchallenge.dto.PagamentoDTO;
 import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 
 @RestController
-@RequestMapping("/v1/pedidos")
+@RequestMapping("/v1/pagamento")
 public class PagamentoController {
 
     @Autowired
     private PagamentoService pagamentoService;
     
     @GetMapping(path = "/{idPedido}/status", produces = MediaType.APPLICATION_JSON)
-    public ResponseEntity<PagamentoDTO> obterStatusPagamento(@PathVariable Integer idPedido) throws Exception {
+    public ResponseEntity<PagamentoDTO> obterStatusPagamento(@PathVariable Long idPedido) throws Exception {
         return new ResponseEntity<PagamentoDTO>(pagamentoService.obterStatusPagamento(idPedido), HttpStatus.CREATED);
+    }
+    
+    @GetMapping(path = "/{idPedido}/qrCode", produces = MediaType.APPLICATION_JSON)
+    public ResponseEntity<String> gerarQrCode(@PathVariable Long idPedido) throws Exception {
+        return new ResponseEntity<String>(pagamentoService.gerarCodigoQRPagamento(idPedido), HttpStatus.CREATED);
     }
 }

@@ -1,5 +1,7 @@
 package br.com.postech.software.architecture.techchallenge.service.impl;
 
+import java.time.LocalDateTime;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,7 +11,6 @@ import com.google.common.base.Optional;
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.connector.MercadoLivreConnector;
 import br.com.postech.software.architecture.techchallenge.dto.MercadoPagoQrCodeRequestDTO;
-import br.com.postech.software.architecture.techchallenge.dto.MercadoPagoQrCodeResponseDTO;
 import br.com.postech.software.architecture.techchallenge.dto.PagamentoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.StatusPagamentoEnum;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
@@ -31,9 +32,17 @@ public class PagamentoServiceImpl implements PagamentoService {
 	protected PagamentoJpaRepository getPersistencia() {
 		return pagamentoJpaRepository;
 	}
+	
+		@Override
+		public void salvarComIdPedido(Long idPedido) {
+		Pagamento pagamento = new Pagamento(idPedido);
+		pagamento.setDataPagamento(LocalDateTime.now());
+		pagamento.setStatusPagamento(StatusPagamentoEnum.PENDENTE);
+		pagamento = getPersistencia().save(pagamento);
+		}
 
 	@Override
-	public PagamentoDTO findByIdPedido(Integer idPedido) {
+	public PagamentoDTO findByIdPedido(Long idPedido) {
 		Optional<Pagamento> optPagamento = pagamentoJpaRepository.findByPedidoId(idPedido);
 		if(optPagamento.isPresent()){
 			return MAPPER.map(optPagamento.get(), PagamentoDTO.class);
@@ -42,7 +51,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 	}
 
 	@Override
-	public PagamentoDTO obterStatusPagamento(Integer idPedido) {
+	public PagamentoDTO obterStatusPagamento(Long idPedido) {
 		
 		PagamentoDTO pagamentoDTO = findByIdPedido(idPedido);
 		pagamentoDTO.setDescricaoStatusPagamento(StatusPagamentoEnum.get(pagamentoDTO.getStatusPagamento()).getDescricao());
@@ -50,7 +59,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 	}
 
 	@Override
-	public String gerarCodigoQRPagamento(Integer idPedido) throws Exception {
+	public String gerarCodigoQRPagamento(Long idPedido) throws Exception {
 		return mercadoLivreConnector.generateMercadoPagoQrCode(new MercadoPagoQrCodeRequestDTO()).getQrCode();
 	}
 }
