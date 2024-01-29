@@ -14,11 +14,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/produtos",
+							"raw": "localhost:31800/v1/produtos",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"produtos"
@@ -40,11 +40,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/produtos/:produtoId",
+							"raw": "localhost:31800/v1/produtos/:produtoId",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"produtos",
@@ -82,11 +82,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/produtos",
+							"raw": "localhost:31800/v1/produtos",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"produtos"
@@ -110,11 +110,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/produtos",
+							"raw": "localhost:31800/v1/produtos",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"produtos"
@@ -129,11 +129,11 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/produtos/:produtoId",
+							"raw": "localhost:31800/v1/produtos/:produtoId",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"produtos",
@@ -169,11 +169,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/pedidos/checkout",
+							"raw": "localhost:31800/v1/pedidos/checkout",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"pedidos",
@@ -198,11 +198,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/pedidos/checkout",
+							"raw": "localhost:31800/v1/pedidos/checkout",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"pedidos",
@@ -230,11 +230,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/pedidos",
+							"raw": "localhost:31800/v1/pedidos",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"pedidos"
@@ -261,11 +261,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/pedidos/:pedidoId",
+							"raw": "localhost:31800/v1/pedidos/:pedidoId",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"pedidos",
@@ -301,11 +301,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/clientes/:clienteId",
+							"raw": "localhost:31800/v1/clientes/:clienteId",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"clientes",
@@ -327,11 +327,11 @@
 						"method": "PUT",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/clientes/:clienteId",
+							"raw": "localhost:31800/v1/clientes/:clienteId",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"clientes",
@@ -362,11 +362,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/v1/clientes",
+							"raw": "localhost:31800/v1/clientes",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"clientes"
@@ -381,11 +381,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/clientes/:clienteId",
+							"raw": "localhost:31800/v1/clientes/:clienteId",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"clientes",
@@ -407,11 +407,11 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:8080/v1/clientes",
+							"raw": "localhost:31800/v1/clientes",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "31800",
 							"path": [
 								"v1",
 								"clientes"
