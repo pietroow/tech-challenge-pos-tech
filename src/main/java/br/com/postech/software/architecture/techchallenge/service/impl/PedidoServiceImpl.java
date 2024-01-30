@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,13 +38,13 @@ public class PedidoServiceImpl implements PedidoService {
 	private final ClientService clientService;
 	private final ProdutoService produtoService;
 
-	public PedidoServiceImpl(PedidoJpaRepository pedidoJpaRepository, ClientService clientService, ProdutoService produtoService) {
+	public PedidoServiceImpl(PedidoJpaRepository pedidoJpaRepository, ClientService clientService, ProdutoService produtoService, PagamentoService pagamentoService) {
 		this.pedidoJpaRepository = pedidoJpaRepository;
 		this.clientService = clientService;
 		this.produtoService = produtoService;
-	}
+    }
 
-	protected PedidoJpaRepository getPersistencia() {
+    protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
 	}
 
@@ -77,7 +78,7 @@ public class PedidoServiceImpl implements PedidoService {
 
 	@Override
 	@Transactional
-	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
+	public Long fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
 		//Obtem os dados do pedido
 		MAPPER.typeMap(PedidoDTO.class, Pedido.class)
 				.addMappings(mapperA -> mapperA
@@ -103,7 +104,7 @@ public class PedidoServiceImpl implements PedidoService {
 					mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 				});
 
-		return MAPPER.map(pedido, PedidoDTO.class);
+		return pedido.getId();
 	}
 
 	private void valideProduto(Pedido pedido)  throws BusinessException{

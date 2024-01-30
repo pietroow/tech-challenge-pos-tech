@@ -11,5 +11,5 @@ public interface PedidoService {
 	
 	PedidoDTO findById(Integer id) throws BusinessException;
 	
-	PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException;
+	Long fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException;
 }
