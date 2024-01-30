@@ -28,9 +28,9 @@ Esta seção descreve como implantar a aplicação e o banco de dados PostgreSQL
 
 ### Pré-requisitos
 
--   Kubernetes cluster
--   `kubectl` configurado
--   Docker (opcional, para construção de imagem personalizada)
+•	Kubernetes cluster
+•	Kubectl configurado
+•	Docker Kubernetes
 
 ### Passos para Implantação
 
@@ -43,7 +43,7 @@ kubectl apply -f ./k8s/postgresql.yaml
 
 #### 2. Implantar a Aplicação
 
-Certifique-se de que a imagem Docker está disponível em um repositório acessível pelo seu cluster Kubernetes. Atualize o arquivo `app-deployment.yaml` com o nome da sua imagem Docker e aplique:
+Implante o PostgreSQL usando o arquivo `app-deployment.yaml`:
 ````
 kubectl apply -f ./k8s/app.yaml
 ````
@@ -58,8 +58,8 @@ http://localhost:31800/v1/
 
 Para remover os recursos criados:
 ````
-kubectl delete -f k8s/app-deployment.yaml
-kubectl delete -f k8s/postgresql-deployment.yaml
+kubectl delete -f ./k8s/app.yaml
+kubectl delete -f ./k8s/postgresql.yaml
 ````
 
 # Vídeo explicativo
