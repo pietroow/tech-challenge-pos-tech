@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +26,6 @@ import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.model.Produto;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.ClientService;
-import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
 import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
@@ -33,35 +34,35 @@ import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 public class PedidoServiceImpl implements PedidoService {
 	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
 
-	@Autowired
-	private PedidoJpaRepository pedidoJpaRepository;
-	@Autowired
-	private ClientService clientService;
-	@Autowired
-	private ProdutoService produtoService;
-	@Autowired
-	private PagamentoService pagamentoService;
+	private final PedidoJpaRepository pedidoJpaRepository;
+	private final ClientService clientService;
+	private final ProdutoService produtoService;
 
-	protected PedidoJpaRepository getPersistencia() {
+	public PedidoServiceImpl(PedidoJpaRepository pedidoJpaRepository, ClientService clientService, ProdutoService produtoService, PagamentoService pagamentoService) {
+		this.pedidoJpaRepository = pedidoJpaRepository;
+		this.clientService = clientService;
+		this.produtoService = produtoService;
+    }
+
+    protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
 	}
 
 	@Override
 	public List<PedidoDTO> findTodosPedidosAtivos()throws BusinessException{
-		List<Pedido> pedidos = getPersistencia()
-				.findByStatusPedidoNotIn(
-						Arrays.asList(
-								StatusPedidoEnum.CONCLUIDO,
-								StatusPedidoEnum.CANCELADO)
-				);
+
+		List<Pedido> pedidos = getPersistencia().findByStatusPedidoNotIn(
+				Arrays.asList(StatusPedidoEnum.CONCLUIDO, StatusPedidoEnum.CANCELADO),
+				Sort.by(Sort.Direction.ASC, "dataPedido")
+		);
 
 		MAPPER.typeMap(Pedido.class, PedidoDTO.class)
-		.addMappings(mapperA -> mapperA
-				.using(new StatusPedidoParaInteiroConverter())
-					.map(Pedido::getStatusPedido, PedidoDTO::setStatusPedido))
-		.addMappings(mapper -> {
-			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
-		});
+				.addMappings(mapperA -> mapperA
+						.using(new StatusPedidoParaInteiroConverter())
+						.map(Pedido::getStatusPedido, PedidoDTO::setStatusPedido))
+				.addMappings(mapper -> {
+					mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
+				});
 
 		return MAPPER.map(pedidos, new TypeToken<List<PedidoDTO>>() {}.getType());
 	}
@@ -80,8 +81,8 @@ public class PedidoServiceImpl implements PedidoService {
 	public Long fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
 		//Obtem os dados do pedido
 		MAPPER.typeMap(PedidoDTO.class, Pedido.class)
-			.addMappings(mapperA -> mapperA
-					.using(new InteiroParaStatusPedidoConverter())
+				.addMappings(mapperA -> mapperA
+						.using(new InteiroParaStatusPedidoConverter())
 						.map(PedidoDTO::getStatusPedido, Pedido::setStatusPedido));
 
 		Pedido pedido = MAPPER.map(pedidoDTO, Pedido.class);
@@ -96,36 +97,35 @@ public class PedidoServiceImpl implements PedidoService {
 		pedido = getPersistencia().save(pedido);
 
 		MAPPER.typeMap(Pedido.class, PedidoDTO.class)
-		.addMappings(mapperA -> mapperA
-				.using(new StatusPedidoParaInteiroConverter())
-					.map(Pedido::getStatusPedido, PedidoDTO::setStatusPedido))
-		.addMappings(mapper -> {
-			  mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
-		});
+				.addMappings(mapperA -> mapperA
+						.using(new StatusPedidoParaInteiroConverter())
+						.map(Pedido::getStatusPedido, PedidoDTO::setStatusPedido))
+				.addMappings(mapper -> {
+					mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
+				});
 
-		//return MAPPER.map(pedido, PedidoDTO.class);
 		return pedido.getId();
 	}
 
 	private void valideProduto(Pedido pedido)  throws BusinessException{
 		//Verifica se o está cadastrado produtos
 		Optional.ofNullable(pedido.getProdutos())
-			.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
-			.stream()
-			.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) &&
-								     Objects.nonNull(pedidoProduto.getProduto().getId()))
-			.findAny()
-			.orElseThrow(() -> new BusinessException("Produto não cadastrado!"));
+				.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
+				.stream()
+				.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) &&
+						Objects.nonNull(pedidoProduto.getProduto().getId()))
+				.findAny()
+				.orElseThrow(() -> new BusinessException("Produto não cadastrado!"));
 
 		//Atribui atualiza lista de pedido_produto.
 		pedido.getProdutos()
-			.stream()
-			.distinct()
-			.forEach(pedidoProduto -> {
+				.stream()
+				.distinct()
+				.forEach(pedidoProduto -> {
 					pedidoProduto.setPedido(pedido);
 					Produto produto = produtoService.findProdutoById(pedidoProduto.getProduto().getId());
 					pedidoProduto.setProduto(produto);
-			});
+				});
 	}
 
 	private void valideCliente(Pedido pedido) throws BusinessException{

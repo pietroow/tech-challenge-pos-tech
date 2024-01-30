@@ -9,5 +9,5 @@ import com.google.common.base.Optional;
 @Repository
 public interface PagamentoJpaRepository extends JpaRepository<Pagamento, Long> {
 
-    Optional<Pagamento> findByPedidoId(Long idPedido);
+    Optional<Pagamento> findByIdPedido(Long idPedido);
 }

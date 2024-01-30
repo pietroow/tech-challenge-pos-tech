@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS pedido_produto (
-											  id INTEGER PRIMARY KEY,
+                                              id INTEGER PRIMARY KEY,
                                               pedido_id INTEGER,
                                               produto_id INTEGER,
                                               quantidade INTEGER,

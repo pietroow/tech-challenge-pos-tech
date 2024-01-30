@@ -32,7 +32,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 	protected PagamentoJpaRepository getPersistencia() {
 		return pagamentoJpaRepository;
 	}
-	
+
 		@Override
 		public void salvarComIdPedido(Long idPedido) {
 		Pagamento pagamento = new Pagamento(idPedido);
@@ -43,7 +43,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 
 	@Override
 	public PagamentoDTO findByIdPedido(Long idPedido) {
-		Optional<Pagamento> optPagamento = pagamentoJpaRepository.findByPedidoId(idPedido);
+		Optional<Pagamento> optPagamento = pagamentoJpaRepository.findByIdPedido(idPedido);
 		if(optPagamento.isPresent()){
 			return MAPPER.map(optPagamento.get(), PagamentoDTO.class);
 		}
@@ -52,9 +52,9 @@ public class PagamentoServiceImpl implements PagamentoService {
 
 	@Override
 	public PagamentoDTO obterStatusPagamento(Long idPedido) {
-		
+
 		PagamentoDTO pagamentoDTO = findByIdPedido(idPedido);
-		pagamentoDTO.setDescricaoStatusPagamento(StatusPagamentoEnum.get(pagamentoDTO.getStatusPagamento()).getDescricao());
+		pagamentoDTO.setDescricaoStatusPagamento(pagamentoDTO.getStatusPagamento().getDescricao());
 		return pagamentoDTO;
 	}
 
