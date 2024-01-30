@@ -54,7 +54,7 @@ public class PagamentoServiceImpl implements PagamentoService {
 	public PagamentoDTO obterStatusPagamento(Long idPedido) {
 
 		PagamentoDTO pagamentoDTO = findByIdPedido(idPedido);
-		pagamentoDTO.setDescricaoStatusPagamento(StatusPagamentoEnum.get(pagamentoDTO.getStatusPagamento()).getDescricao());
+		pagamentoDTO.setDescricaoStatusPagamento(pagamentoDTO.getStatusPagamento().getDescricao());
 		return pagamentoDTO;
 	}
 
