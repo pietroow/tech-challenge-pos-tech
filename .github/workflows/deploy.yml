@@ -31,15 +31,19 @@ jobs:
 
       - name: Terraform Format
         run: terraform fmt -check
+        working-directory: ./terraform
 
-      - name: Terraform Vlidate
+      - name: Terraform Validate
         run: terraform validate
+        working-directory: ./terraform
 
       - name: Terraform Plan
         run: terraform plan
+        working-directory: ./terraform
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        working-directory: ./terraform
 
         # Passo adicional para configurar kubectl
       - name: Install kubectl
