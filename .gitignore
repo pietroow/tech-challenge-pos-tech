@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignorar a pasta .terraform em qualquer lugar do repositório
+**/.terraform/*
+
+# Ignorar o arquivo .terraform.lock.hcl em qualquer lugar do repositório
+**/.terraform.lock.hcl

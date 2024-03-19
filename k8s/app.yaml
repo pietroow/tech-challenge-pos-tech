@@ -22,7 +22,7 @@ spec:
             - containerPort: 8080
           env:
             - name: SPRING_DATASOURCE_URL
-              value: "jdbc:postgresql://postgreSQL:5432/restaurante"
+              value: "jdbc:postgresql://terraform-20240316143500407600000001.c36c48ce06uv.us-east-1.rds.amazonaws.com:5432/postgres"
             - name: SPRING_DATASOURCE_USERNAME
               value: "postgres"
             - name: SPRING_DATASOURCE_PASSWORD
@@ -45,15 +45,13 @@ metadata:
   labels:
     app: app
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
     - port: 8080
       targetPort: 8080
-      nodePort: 31800
       protocol: TCP
   selector:
     app: app
-
 ---
 
 apiVersion: autoscaling/v2
