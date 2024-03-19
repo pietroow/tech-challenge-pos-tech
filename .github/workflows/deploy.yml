@@ -23,11 +23,9 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Change to Terraform directory
-        run: cd terraform
-
       - name: Terraform Init
         run: terraform init
+        working-directory: ./terraform
 
       - name: Terraform Format
         run: terraform fmt -check
