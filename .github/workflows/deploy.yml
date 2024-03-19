@@ -57,5 +57,4 @@ jobs:
 
       # Aplicar a configuração do Kubernetes
       - name: Apply Kubernetes configuration
-        run: |
-          kubectl apply -f ../k8s/app.yaml
+        run: kubectl apply -f k8s/app.yaml

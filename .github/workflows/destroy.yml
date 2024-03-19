@@ -30,14 +30,13 @@ jobs:
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Change to Terraform directory
-        run: cd terraform
-
       - name: Terraform Initialize
         run: terraform init
+        working-directory: ./terraform
 
       - name: Terraform Destroy
         run: terraform destroy -auto-approve
+        working-directory: ./terraform
         env:
           TF_VAR_some_sensitive_var: ${{ secrets.SOME_SENSITIVE_VAR }}
 
@@ -56,4 +55,4 @@ jobs:
       # Aplicar a configuração do Kubernetes
       - name: Apply Kubernetes configuration
         run: |
-          kubectl delete -f ../k8s/app.yaml
+          kubectl delete -f k8s/app.yaml
