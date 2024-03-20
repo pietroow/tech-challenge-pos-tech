@@ -22,48 +22,66 @@ As APIs disponíveis são: <br />
 
 Para utilizar as APIs importe o arquivo: https://github.com/pietroow/tech-challenge-pos-tech/blob/main/Tech-challenge.postman_collection.json no postman
 
-## Implantação no Kubernetes
-
-Esta seção descreve como implantar a aplicação e o banco de dados PostgreSQL no Kubernetes.
-
-### Pré-requisitos
-
-•	Kubernetes cluster
-•	Kubectl configurado
-•	Docker Kubernetes
-
 ### Passos para Implantação
 
-#### 1. Implantar o Banco de Dados PostgreSQL
+Implantação com Terraform na AWS
 
-Implante o PostgreSQL usando o arquivo `postgresql-deployment.yaml`:
-````
-kubectl apply -f ./k8s/postgresql.yaml
-````
+Esta seção descreve o processo de implantação da infraestrutura e da aplicação utilizando o Terraform para provisionar uma VPC, uma instância de banco de dados RDS e um cluster EKS na AWS.
 
-#### 2. Implantar a Aplicação
+Pré-requisitos
 
-Implante o PostgreSQL usando o arquivo `app-deployment.yaml`:
-````
-kubectl apply -f ./k8s/app.yaml
-````
+-	Terraform instalado e configurado em sua máquina local.
+-	Acesso configurado à AWS CLI com as permissões necessárias para criar recursos na AWS
+
+Passos para Implantação
+
+#### 1.	Inicializar o Terraform
+  Inicialize o Terraform para instalar os plugins necessários e preparar o ambiente de trabalho:
+  ```
+ terraform init
+  ```
+
+#### 2.	Criar a Infraestrutura na AWS
+
+ Execute o Terraform para criar a VPC, sub-redes, gateways, o cluster EKS e uma         instância de banco de dados RDS:
+```
+ terraform apply -auto-approve
+```
+Esse comando irá provisionar:
+
+- Uma VPC customizada para o seu cluster EKS.
+- Sub-redes privadas e públicas dentro da VPC.
+- Uma instância de banco de dados RDS configurada para uso com PostgreSQL.
+- Um cluster EKS com os recursos necessários.
 
 #### 3. Acessar a Aplicação
 
-Encontre o IP e a porta para acessar a aplicação:
-````
-http://localhost:31800/v1/
-````
+Após o provisionamento do cluster EKS, você poderá configurar o `kubectl` para interagir com o cluster:
+```
+aws eks --region <regiao> update-kubeconfig --name <nome_do_cluster>
+```
+Para acessar a aplicação, localize o endpoint exposto pelo Load Balancer:
+```
+kubectl get svc
+```
+A aplicação será acessível no endereço IP externo provido pelo serviço Load Balancer na porta especificada.
+
 ### Limpeza
 
-Para remover os recursos criados:
-````
-kubectl delete -f ./k8s/app.yaml
-kubectl delete -f ./k8s/postgresql.yaml
-````
+Quando não for mais necessário, você pode destruir toda a infraestrutura criada pelo Terraform:
+```
+terraform destroy
+```
+Este comando irá desalocar todos os recursos provisionados na AWS, como a VPC, o cluster EKS e a instância RDS.
+Atenção: Certifique-se de ter backups apropriados antes de destruir o banco de dados RDS se você estiver armazenando dados críticos.
+
+
 
 # Vídeo explicativo
+Este vídeo foi produzido para apresentar o progresso da fase 3 do projeto. Devido à sua extensão, foi necessário dividi-lo em duas partes.
 
-Segue link do vídeo que explica como a arquitetura e aplicação estão estruturadas e como funciona a implantação.
+Parte 1
+https://youtu.be/aJEGGsBnekU
 
-https://youtu.be/xlN9m0xdUzc
+Parte 2 
+https://youtu.be/hrz_YRGDWoc
