@@ -1,8 +1,6 @@
 name: 'Terraform'
 
 on:
-  push:
-    branches: ["dev"]
   pull_request:
     branches: ["main"]
 
@@ -23,23 +21,25 @@ jobs:
       - name: Install Terraform
         uses: hashicorp/setup-terraform@v1
 
-      - name: Change to Terraform directory
-        run: cd terraform
-
       - name: Terraform Init
         run: terraform init
+        working-directory: ./terraform
 
       - name: Terraform Format
         run: terraform fmt -check
+        working-directory: ./terraform
 
-      - name: Terraform Vlidate
+      - name: Terraform Validate
         run: terraform validate
+        working-directory: ./terraform
 
       - name: Terraform Plan
         run: terraform plan
+        working-directory: ./terraform
 
       - name: Terraform Apply
         run: terraform apply -auto-approve
+        working-directory: ./terraform
 
         # Passo adicional para configurar kubectl
       - name: Install kubectl
@@ -55,5 +55,4 @@ jobs:
 
       # Aplicar a configuração do Kubernetes
       - name: Apply Kubernetes configuration
-        run: |
-          kubectl apply -f ../k8s/app.yaml
+        run: kubectl apply -f k8s/app.yaml
