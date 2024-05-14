@@ -29,4 +29,9 @@ public class PagamentoController {
     public ResponseEntity<String> gerarQrCode(@PathVariable Long idPedido) throws Exception {
         return new ResponseEntity<String>(pagamentoService.gerarCodigoQRPagamento(idPedido), HttpStatus.CREATED);
     }
+        
+    @PostMapping(path = "/{idPedido}", produces = MediaType.APPLICATION_JSON)
+    public ResponseEntity<String> gerarQrCode(@PathVariable Long idPedido) throws Exception {
+        return new ResponseEntity<String>(pagamentoService.salvarComIdPedido(idPedido), HttpStatus.CREATED);
+    }
 }
