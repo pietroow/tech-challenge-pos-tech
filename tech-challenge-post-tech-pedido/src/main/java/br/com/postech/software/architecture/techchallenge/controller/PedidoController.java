@@ -1,17 +1,11 @@
 package br.com.postech.software.architecture.techchallenge.controller;
 
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
-import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.core.MediaType;
 import java.util.List;
@@ -22,8 +16,8 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
-    @Autowired
-    private PagamentoService pagamentoService;
+//    @Autowired
+//    private PagamentoService pagamentoService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<List<PedidoDTO>> listarTodosPedidosAtivos() throws Exception {
@@ -38,7 +32,8 @@ public class PedidoController {
     @PostMapping(path = "/checkout", produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<Long> fazerCheckoutFake(@RequestBody PedidoDTO pedidoDTO) throws Exception {
         Long idPedido = pedidoService.fazerPedidoFake(pedidoDTO);
-        pagamentoService.salvarComIdPedido(idPedido);
+        //TODO Chamar microserviço de pagamento aqui
+        //pagamentoService.salvarComIdPedido(idPedido);
         return new ResponseEntity<Long>(idPedido, HttpStatus.CREATED);
     }
 }

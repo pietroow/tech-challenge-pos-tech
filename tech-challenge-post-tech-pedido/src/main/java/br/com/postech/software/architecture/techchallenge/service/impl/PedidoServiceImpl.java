@@ -9,7 +9,6 @@ import java.util.Optional;
 import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +20,10 @@ import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
-import br.com.postech.software.architecture.techchallenge.model.Cliente;
 import br.com.postech.software.architecture.techchallenge.model.Pedido;
-import br.com.postech.software.architecture.techchallenge.model.Produto;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.service.ClientService;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
-import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
 import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 
 @Service
@@ -38,7 +34,8 @@ public class PedidoServiceImpl implements PedidoService {
 	private final ClientService clientService;
 	private final ProdutoService produtoService;
 
-	public PedidoServiceImpl(PedidoJpaRepository pedidoJpaRepository, ClientService clientService, ProdutoService produtoService, PagamentoService pagamentoService) {
+	public PedidoServiceImpl(PedidoJpaRepository pedidoJpaRepository, ClientService clientService,
+			ProdutoService produtoService, PagamentoService pagamentoService) {
 		this.pedidoJpaRepository = pedidoJpaRepository;
 		this.clientService = clientService;
 		this.produtoService = produtoService;
@@ -107,7 +104,9 @@ public class PedidoServiceImpl implements PedidoService {
 		return pedido.getId();
 	}
 
-	private void valideProduto(Pedido pedido)  throws BusinessException{
+	private void valideProduto(Pedido pedido)  throws BusinessException {
+		//TODO Trocar pedido por pedidoDTO e fazer validação de existencia de produto
+
 		//Verifica se o está cadastrado produtos
 		Optional.ofNullable(pedido.getProdutos())
 				.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
@@ -128,11 +127,11 @@ public class PedidoServiceImpl implements PedidoService {
 				});
 	}
 
-	private void valideCliente(Pedido pedido) throws BusinessException{
+	private void valideCliente(Pedido pedido) throws BusinessException {
 		//Caso informe dados do cliente, é obrigatorio o cliente existir
 		if(Objects.nonNull(pedido.getCliente())) {
+			//TODO Trocar por conector e por clientDTO
 			pedido.getCliente().setCpf(CpfCnpjUtil.removeMaskCPFCNPJ(pedido.getCliente().getCpf()));
-
 			Cliente cliente = clientService.findByCpfOrNomeOrEmail(pedido.getCliente().getCpf(),
 					pedido.getCliente().getNome(), pedido.getCliente().getEmail());
 
@@ -143,5 +142,4 @@ public class PedidoServiceImpl implements PedidoService {
 			pedido.setCliente(cliente);
 		}
 	}
-
 }
