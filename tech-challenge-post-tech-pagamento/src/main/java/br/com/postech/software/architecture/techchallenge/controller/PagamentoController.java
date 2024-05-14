@@ -5,10 +5,7 @@ import javax.ws.rs.core.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import br.com.postech.software.architecture.techchallenge.dto.PagamentoDTO;
 import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
@@ -31,7 +28,8 @@ public class PagamentoController {
     }
         
     @PostMapping(path = "/{idPedido}", produces = MediaType.APPLICATION_JSON)
-    public ResponseEntity<String> gerarQrCode(@PathVariable Long idPedido) throws Exception {
-        return new ResponseEntity<String>(pagamentoService.salvarComIdPedido(idPedido), HttpStatus.CREATED);
+    public ResponseEntity<HttpStatus> salvarComIdPedido(@PathVariable Long idPedido) throws Exception {
+        pagamentoService.salvarComIdPedido(idPedido);
+        return new ResponseEntity<HttpStatus>(HttpStatus.CREATED);
     }
 }
