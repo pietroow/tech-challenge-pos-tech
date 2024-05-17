@@ -22,23 +22,16 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
-    @Autowired
-    private PagamentoService pagamentoService;
 
+    //PRODUCAO
     @GetMapping(produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<List<PedidoDTO>> listarTodosPedidosAtivos() throws Exception {
         return new ResponseEntity<>(pedidoService.findTodosPedidosAtivos(), HttpStatus.OK);
     }
 
+    //PRODUCAO
     @GetMapping(path = "/{idPedido}", produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<PedidoDTO> buscarPedido(@PathVariable Integer idPedido) throws Exception {
         return new ResponseEntity<>(pedidoService.findById(idPedido), HttpStatus.OK);
-    }
-
-    @PostMapping(path = "/checkout", produces = MediaType.APPLICATION_JSON)
-    public ResponseEntity<Long> fazerCheckoutFake(@RequestBody PedidoDTO pedidoDTO) throws Exception {
-        Long idPedido = pedidoService.fazerPedidoFake(pedidoDTO);
-        pagamentoService.salvarComIdPedido(idPedido);
-        return new ResponseEntity<Long>(idPedido, HttpStatus.CREATED);
     }
 }

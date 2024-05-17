@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import com.google.common.base.Optional;
 
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
-import br.com.postech.software.architecture.techchallenge.connector.MercadoLivreConnector;
-import br.com.postech.software.architecture.techchallenge.dto.MercadoPagoQrCodeRequestDTO;
 import br.com.postech.software.architecture.techchallenge.dto.PagamentoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.StatusPagamentoEnum;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
@@ -26,20 +24,9 @@ public class PagamentoServiceImpl implements PagamentoService {
 	@Autowired
 	private PagamentoJpaRepository pagamentoJpaRepository;
 
-	@Autowired
-	private MercadoLivreConnector mercadoLivreConnector;
-
 	protected PagamentoJpaRepository getPersistencia() {
 		return pagamentoJpaRepository;
 	}
-
-		@Override
-		public void salvarComIdPedido(Long idPedido) {
-		Pagamento pagamento = new Pagamento(idPedido);
-		pagamento.setDataPagamento(LocalDateTime.now());
-		pagamento.setStatusPagamento(StatusPagamentoEnum.PENDENTE);
-		pagamento = getPersistencia().save(pagamento);
-		}
 
 	@Override
 	public PagamentoDTO findByIdPedido(Long idPedido) {
@@ -56,10 +43,5 @@ public class PagamentoServiceImpl implements PagamentoService {
 		PagamentoDTO pagamentoDTO = findByIdPedido(idPedido);
 		pagamentoDTO.setDescricaoStatusPagamento(pagamentoDTO.getStatusPagamento().getDescricao());
 		return pagamentoDTO;
-	}
-
-	@Override
-	public String gerarCodigoQRPagamento(Long idPedido) throws Exception {
-		return mercadoLivreConnector.generateMercadoPagoQrCode(new MercadoPagoQrCodeRequestDTO()).getQrCode();
 	}
 }
