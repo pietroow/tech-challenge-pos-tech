@@ -10,6 +10,6 @@ public interface PedidoService {
 	List<PedidoDTO> findTodosPedidosAtivos() throws BusinessException;
 	
 	PedidoDTO findById(Integer id) throws BusinessException;
-	
-	Long fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException;
+
+	PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws Exception;
 }

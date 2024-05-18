@@ -1,6 +1,7 @@
 package br.com.postech.software.architecture.techchallenge.client.controller;
 
 import br.com.postech.software.architecture.techchallenge.client.dto.ClienteDTO;
+import br.com.postech.software.architecture.techchallenge.client.dto.ValidaClienteResponseDTO;
 import br.com.postech.software.architecture.techchallenge.client.service.ClientService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ public class ClienteController {
     }
 
     @GetMapping(value = "/valida", produces = MediaType.APPLICATION_JSON)
-    public ResponseEntity<Boolean> validaCliente(@RequestBody ClienteDTO clienteDTO) {
+    public ResponseEntity<ValidaClienteResponseDTO> validaCliente(@RequestBody ClienteDTO clienteDTO) {
         return new ResponseEntity<>(clienteService.valideCliente(clienteDTO), HttpStatus.OK);
     }
 }

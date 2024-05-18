@@ -3,10 +3,12 @@ package br.com.postech.software.architecture.techchallenge.service.impl;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
+import br.com.postech.software.architecture.techchallenge.connector.ClienteConnector;
+import br.com.postech.software.architecture.techchallenge.connector.ProdutoConnector;
+import br.com.postech.software.architecture.techchallenge.dto.*;
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.data.domain.Sort;
@@ -16,30 +18,21 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.configuration.StatusPedidoParaInteiroConverter;
 import br.com.postech.software.architecture.techchallenge.configuration.InteiroParaStatusPedidoConverter;
-import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
 import br.com.postech.software.architecture.techchallenge.model.Pedido;
 import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
-import br.com.postech.software.architecture.techchallenge.service.ClientService;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
-import br.com.postech.software.architecture.techchallenge.util.CpfCnpjUtil;
 
+@AllArgsConstructor
 @Service
 public class PedidoServiceImpl implements PedidoService {
 	private static final ModelMapper MAPPER = ModelMapperConfiguration.getModelMapper();
 
 	private final PedidoJpaRepository pedidoJpaRepository;
-	private final ClientService clientService;
-	private final ProdutoService produtoService;
-
-	public PedidoServiceImpl(PedidoJpaRepository pedidoJpaRepository, ClientService clientService,
-			ProdutoService produtoService, PagamentoService pagamentoService) {
-		this.pedidoJpaRepository = pedidoJpaRepository;
-		this.clientService = clientService;
-		this.produtoService = produtoService;
-    }
+	private ClienteConnector clienteConnector;
+	private ProdutoConnector produtoConnector;
 
     protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
@@ -75,7 +68,7 @@ public class PedidoServiceImpl implements PedidoService {
 
 	@Override
 	@Transactional
-	public Long fazerPedidoFake(PedidoDTO pedidoDTO) throws BusinessException {
+	public PedidoDTO fazerPedidoFake(PedidoDTO pedidoDTO) throws Exception {
 		//Obtem os dados do pedido
 		MAPPER.typeMap(PedidoDTO.class, Pedido.class)
 				.addMappings(mapperA -> mapperA
@@ -86,9 +79,19 @@ public class PedidoServiceImpl implements PedidoService {
 		pedido.setDataPedido(LocalDateTime.now());
 		pedido.setStatusPedido(StatusPedidoEnum.REALIZADO);
 
-		valideCliente(pedido);
+		ValidaClienteResponseDTO validaClienteResponseDTO = clienteConnector.validaCliente(pedidoDTO.getCliente());
+		if(!validaClienteResponseDTO.isValid()) {
+			throw new Exception(validaClienteResponseDTO.getErrorMessage());
+		}
 
-		valideProduto(pedido);
+		ValidaProdutoResponseDTO validaProdutoResponseDTO = produtoConnector.validaProdutos(
+				new ValidaProdutoRequestDTO(pedidoDTO.getProdutos()
+					.stream()
+					.map(PedidoProdutoDTO::getProduto)
+					.collect(Collectors.toList())));
+		if(!validaProdutoResponseDTO.isValid()) {
+			throw new Exception(validaProdutoResponseDTO.getErrorMessage());
+		}
 
 		//Salva o pedido e obtem seu numero
 		pedido = getPersistencia().save(pedido);
@@ -101,45 +104,6 @@ public class PedidoServiceImpl implements PedidoService {
 					mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 				});
 
-		return pedido.getId();
-	}
-
-	private void valideProduto(Pedido pedido)  throws BusinessException {
-		//TODO Trocar pedido por pedidoDTO e fazer validação de existencia de produto
-
-		//Verifica se o está cadastrado produtos
-		Optional.ofNullable(pedido.getProdutos())
-				.orElseThrow(() -> new BusinessException("É obrigatório informar algum produto!"))
-				.stream()
-				.filter(pedidoProduto -> Objects.nonNull(pedidoProduto.getProduto()) &&
-						Objects.nonNull(pedidoProduto.getProduto().getId()))
-				.findAny()
-				.orElseThrow(() -> new BusinessException("Produto não cadastrado!"));
-
-		//Atribui atualiza lista de pedido_produto.
-		pedido.getProdutos()
-				.stream()
-				.distinct()
-				.forEach(pedidoProduto -> {
-					pedidoProduto.setPedido(pedido);
-					Produto produto = produtoService.findProdutoById(pedidoProduto.getProduto().getId());
-					pedidoProduto.setProduto(produto);
-				});
-	}
-
-	private void valideCliente(Pedido pedido) throws BusinessException {
-		//Caso informe dados do cliente, é obrigatorio o cliente existir
-		if(Objects.nonNull(pedido.getCliente())) {
-			//TODO Trocar por conector e por clientDTO
-			pedido.getCliente().setCpf(CpfCnpjUtil.removeMaskCPFCNPJ(pedido.getCliente().getCpf()));
-			Cliente cliente = clientService.findByCpfOrNomeOrEmail(pedido.getCliente().getCpf(),
-					pedido.getCliente().getNome(), pedido.getCliente().getEmail());
-
-			if(Objects.isNull(cliente)) {
-				throw new BusinessException("Cliente não encontrado!");
-			}
-
-			pedido.setCliente(cliente);
-		}
+		return pedidoDTO;
 	}
 }

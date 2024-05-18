@@ -2,6 +2,8 @@ package br.com.postech.software.architecture.techchallenge.service.impl;
 
 import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.dto.ProdutoDTO;
+import br.com.postech.software.architecture.techchallenge.dto.ValidaProdutoRequestDTO;
+import br.com.postech.software.architecture.techchallenge.dto.ValidaProdutoResponseDTO;
 import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
 import br.com.postech.software.architecture.techchallenge.model.Produto;
@@ -15,6 +17,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -47,7 +50,7 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public ProdutoDTO findById(Long id) {
+    public ProdutoDTO getDTOById(Long id) {
         Produto produto = produtoRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado."));
@@ -57,10 +60,14 @@ public class ProdutoServiceImpl implements ProdutoService {
     }
 
     @Override
-    public Produto findProdutoById(Long id) {
+    public Produto findById(Long id) {
         return produtoRepository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Produto não encontrado."));
+    }
+
+    public Optional<Produto> findOptionalById(Long id) {
+        return produtoRepository.findById(id);
     }
 
     @Override
@@ -100,5 +107,30 @@ public class ProdutoServiceImpl implements ProdutoService {
                 .forEach(img -> {
                     img.setProduto(produto);
                 });
+    }
+
+    public ValidaProdutoResponseDTO validateProduto(ValidaProdutoRequestDTO validaProdutoRequestDTO) {
+
+        if(CollectionUtils.isEmpty(validaProdutoRequestDTO.getProdutoDTOS())){
+            return new ValidaProdutoResponseDTO().toBuilder()
+                    .setIsValid(false)
+                    .setErrorMessage("Nenhum Produto informado para Validação")
+                    .build();
+        }
+
+        for (ProdutoDTO produtoDTO : validaProdutoRequestDTO.getProdutoDTOS()) {
+            if(!findOptionalById(produtoDTO.getId()).isPresent()){
+                return new ValidaProdutoResponseDTO().toBuilder()
+                        .setProdutoDTOs(validaProdutoRequestDTO.getProdutoDTOS())
+                        .setIsValid(false)
+                        .setErrorMessage("Produto Inválido encontrado")
+                        .build();
+            }
+        }
+
+        return new ValidaProdutoResponseDTO().toBuilder()
+                .setProdutoDTOs(validaProdutoRequestDTO.getProdutoDTOS())
+                .setIsValid(true)
+                .build();
     }
 }

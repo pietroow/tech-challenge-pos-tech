@@ -1,17 +1,18 @@
 package br.com.postech.software.architecture.techchallenge.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+
 @Data
 @Builder
+@AllArgsConstructor
 @NoArgsConstructor
-public class MercadoPagoQrCodeResponseDTO {
+public class ValidaProdutoRequestDTO {
 
-	private String qrCode;
-
-	public MercadoPagoQrCodeResponseDTO(String qrCode){
-		this.qrCode = qrCode;
-	}
+    private List<ProdutoDTO> produtoDTOs;
 }

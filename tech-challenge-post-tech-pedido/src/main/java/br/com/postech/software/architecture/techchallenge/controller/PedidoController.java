@@ -1,6 +1,8 @@
 package br.com.postech.software.architecture.techchallenge.controller;
 
+import br.com.postech.software.architecture.techchallenge.connector.PagamentoConnector;
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
+import br.com.postech.software.architecture.techchallenge.dto.PedidoPagamentoDTO;
 import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +18,8 @@ public class PedidoController {
 
     @Autowired
     private PedidoService pedidoService;
-//    @Autowired
-//    private PagamentoService pagamentoService;
+    @Autowired
+    private PagamentoConnector pagamentoConnector;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON)
     public ResponseEntity<List<PedidoDTO>> listarTodosPedidosAtivos() throws Exception {
@@ -30,10 +32,18 @@ public class PedidoController {
     }
 
     @PostMapping(path = "/checkout", produces = MediaType.APPLICATION_JSON)
-    public ResponseEntity<Long> fazerCheckoutFake(@RequestBody PedidoDTO pedidoDTO) throws Exception {
-        Long idPedido = pedidoService.fazerPedidoFake(pedidoDTO);
+    public ResponseEntity<PedidoPagamentoDTO> fazerCheckoutFake(@RequestBody PedidoDTO pedidoDTO) throws Exception {
+        PedidoDTO savedPedidoDTO = pedidoService.fazerPedidoFake(pedidoDTO);
+        String qrCode = pagamentoConnector.generateMercadoPagoQrCode(savedPedidoDTO);
+        return new ResponseEntity<>(new PedidoPagamentoDTO(qrCode, savedPedidoDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping(path = "/update/pagamento", produces = MediaType.APPLICATION_JSON)
+    public ResponseEntity<Long> recebeUpdatePagamentoeEPedido(@RequestBody PedidoDTO pedidoDTO) throws Exception {
+        //Long idPedido = pedidoService.fazerPedidoFake(pedidoDTO);
         //TODO Chamar microserviço de pagamento aqui
         //pagamentoService.salvarComIdPedido(idPedido);
-        return new ResponseEntity<Long>(idPedido, HttpStatus.CREATED);
+//        return new ResponseEntity<Long>(idPedido, HttpStatus.CREATED);
+        return null;
     }
 }

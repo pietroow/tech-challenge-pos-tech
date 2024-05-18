@@ -7,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.postech.software.architecture.techchallenge.dto.PagamentoDTO;
 import br.com.postech.software.architecture.techchallenge.service.PagamentoService;
 
 @RestController
@@ -22,5 +21,18 @@ public class PagamentoController {
         return new ResponseEntity<String>(pagamentoService.gerarCodigoQRPagamento(idPedido), HttpStatus.CREATED);
     }
 
-    //TODO Inserir forma de confirmação de pagamento aqui (callback do mercado pago?)
+    @PostMapping(path = "/callback/mercado-seguro/status", produces = MediaType.APPLICATION_JSON)
+    public ResponseEntity<String> callbackPagamento(@RequestParam("topic") String topic,
+            @RequestParam("id") Double mercadoPagoId) throws Exception {
+
+        pagamentoService.validatedPaymentCallback(topic, mercadoPagoId);
+        pagamentoService.updatePaymentStatus(mercadoPagoId);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    /*
+     * 1. Recebe notificação com o id do pagamento
+     * 2. Retorna status 200 para avisar que recebeu
+     * 3. Acessar endpoint com informações sobre pagamento
+     * 4. Atualizar entidade pagamento
+     */
 }

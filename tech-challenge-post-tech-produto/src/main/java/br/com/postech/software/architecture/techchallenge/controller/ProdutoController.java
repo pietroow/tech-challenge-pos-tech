@@ -1,7 +1,8 @@
 package br.com.postech.software.architecture.techchallenge.controller;
 
-import br.com.postech.software.architecture.techchallenge.dto.ProdutoCategoriaDTO;
 import br.com.postech.software.architecture.techchallenge.dto.ProdutoDTO;
+import br.com.postech.software.architecture.techchallenge.dto.ValidaProdutoRequestDTO;
+import br.com.postech.software.architecture.techchallenge.dto.ValidaProdutoResponseDTO;
 import br.com.postech.software.architecture.techchallenge.service.ProdutoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -47,7 +48,11 @@ public class ProdutoController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoDTO> buscarProdutoPorId(@PathVariable Long id) {
-        return new ResponseEntity<>(produtoService.findById(id), HttpStatus.OK);
+        return new ResponseEntity<>(produtoService.getDTOById(id), HttpStatus.OK);
     }
 
+    @PostMapping("/validate")
+    public ResponseEntity<ValidaProdutoResponseDTO> validateProduto(@RequestBody ValidaProdutoRequestDTO validaProdutoRequestDTO) {
+        return new ResponseEntity<>(produtoService.validateProduto(validaProdutoRequestDTO), HttpStatus.OK);
+    }
 }

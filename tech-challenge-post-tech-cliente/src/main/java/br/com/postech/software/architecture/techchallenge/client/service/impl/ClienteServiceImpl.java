@@ -1,5 +1,6 @@
 package br.com.postech.software.architecture.techchallenge.client.service.impl;
 
+import br.com.postech.software.architecture.techchallenge.client.dto.ValidaClienteResponseDTO;
 import br.com.postech.software.architecture.techchallenge.client.service.ClientService;
 import br.com.postech.software.architecture.techchallenge.client.configuration.ModelMapperConfiguration;
 import br.com.postech.software.architecture.techchallenge.client.dto.ClienteDTO;
@@ -9,14 +10,12 @@ import br.com.postech.software.architecture.techchallenge.client.repository.Clie
 import br.com.postech.software.architecture.techchallenge.client.util.CpfCnpjUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -101,20 +100,35 @@ public class ClienteServiceImpl implements ClientService {
 
     }
 
-    public Boolean valideCliente(ClienteDTO clienteDTO) {
-        if(!clienteDTO.getIsAnonymous()) {
-            if(isThereClienteById(clienteDTO.getId().intValue())){
-                return true;
-            }
-
-            List<ClienteDTO> clienteDTOs = findAllByCpfOrNomeOrEmail(clienteDTO.getCpf(),
-                    clienteDTO.getNome(), clienteDTO.getEmail());
-
-            if(!CollectionUtils.isEmpty(clienteDTOs)) {
-                return true;
-            }
-            return false;
+    public ValidaClienteResponseDTO valideCliente(ClienteDTO clienteDTO) {
+        if (clienteDTO.getIsAnonymous()) {
+            return new ValidaClienteResponseDTO().toBuilder()
+                    .setClienteDTO(clienteDTO)
+                    .setIsValid(true)
+                    .build();
         }
-        return true;
+        if (isThereClienteById(clienteDTO.getId().intValue())) {
+            return new ValidaClienteResponseDTO().toBuilder()
+                    .setClienteDTO(clienteDTO)
+                    .setIsValid(true)
+                    .build();
+        }
+
+        List<ClienteDTO> clienteDTOs = findAllByCpfOrNomeOrEmail(
+                clienteDTO.getCpf(),
+                clienteDTO.getNome(),
+                clienteDTO.getEmail());
+
+        if (!CollectionUtils.isEmpty(clienteDTOs)) {
+            return new ValidaClienteResponseDTO().toBuilder()
+                    .setClienteDTO(clienteDTO)
+                    .setIsValid(true)
+                    .build();
+        }
+
+        return new ValidaClienteResponseDTO().toBuilder()
+                .setIsValid(false)
+                .setErrorMessage("Cliente não encontrado")
+                .build();
     }
 }
