@@ -20,4 +20,5 @@ public interface ClientService {
 
     List<ClienteDTO> findAllByCpfOrNomeOrEmail(String cpf, String nome, String email) throws BusinessException;
 
+    Boolean valideCliente(ClienteDTO clienteDTO);
 }

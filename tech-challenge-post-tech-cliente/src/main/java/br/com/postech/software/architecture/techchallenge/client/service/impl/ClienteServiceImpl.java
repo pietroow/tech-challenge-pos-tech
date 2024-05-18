@@ -9,9 +9,11 @@ import br.com.postech.software.architecture.techchallenge.client.repository.Clie
 import br.com.postech.software.architecture.techchallenge.client.util.CpfCnpjUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
@@ -42,6 +44,10 @@ public class ClienteServiceImpl implements ClientService {
             return MAPPER.map(cliente.get(), ClienteDTO.class);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado");
+    }
+
+    public boolean isThereClienteById(Integer id) {
+        return clienteJpaRepository.findByIdAndStatus(id, Boolean.TRUE).isPresent();
     }
 
     @Override
@@ -93,5 +99,22 @@ public class ClienteServiceImpl implements ClientService {
                 .map(cliente -> MAPPER.map(cliente, ClienteDTO.class))
                 .collect(Collectors.toList());
 
+    }
+
+    public Boolean valideCliente(ClienteDTO clienteDTO) {
+        if(!clienteDTO.getIsAnonymous()) {
+            if(isThereClienteById(clienteDTO.getId().intValue())){
+                return true;
+            }
+
+            List<ClienteDTO> clienteDTOs = findAllByCpfOrNomeOrEmail(clienteDTO.getCpf(),
+                    clienteDTO.getNome(), clienteDTO.getEmail());
+
+            if(!CollectionUtils.isEmpty(clienteDTOs)) {
+                return true;
+            }
+            return false;
+        }
+        return true;
     }
 }

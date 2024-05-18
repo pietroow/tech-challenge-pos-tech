@@ -57,4 +57,9 @@ public class ClienteController {
 
         return new ResponseEntity<>(clienteDTO, HttpStatus.OK);
     }
+
+    @GetMapping(value = "/valida", produces = MediaType.APPLICATION_JSON)
+    public ResponseEntity<Boolean> validaCliente(@RequestBody ClienteDTO clienteDTO) {
+        return new ResponseEntity<>(clienteService.valideCliente(clienteDTO), HttpStatus.OK);
+    }
 }
