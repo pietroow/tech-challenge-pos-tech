@@ -1,10 +1,9 @@
 package br.com.postech.software.architecture.techchallenge.repository.jdbc.impl;
 
+import br.com.postech.software.architecture.techchallenge.repository.jdbc.IClienteJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-
-import br.com.postech.software.architecture.techchallenge.repository.jdbc.IClienteJdbcRepository;
 
 @Repository
 public class ClienteRepositoryImpl implements IClienteJdbcRepository{

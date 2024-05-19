@@ -1,13 +1,18 @@
 package br.com.postech.software.architecture.techchallenge.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import br.com.postech.software.architecture.techchallenge.configuration.InteiroParaStatusPedidoConverter;
+import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
+import br.com.postech.software.architecture.techchallenge.configuration.StatusPedidoParaInteiroConverter;
 import br.com.postech.software.architecture.techchallenge.connector.ClienteConnector;
+import br.com.postech.software.architecture.techchallenge.connector.ProducaoConnector;
 import br.com.postech.software.architecture.techchallenge.connector.ProdutoConnector;
 import br.com.postech.software.architecture.techchallenge.dto.*;
+import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
+import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
+import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
+import br.com.postech.software.architecture.techchallenge.model.Pedido;
+import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
+import br.com.postech.software.architecture.techchallenge.service.PedidoService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -15,15 +20,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import br.com.postech.software.architecture.techchallenge.configuration.ModelMapperConfiguration;
-import br.com.postech.software.architecture.techchallenge.configuration.StatusPedidoParaInteiroConverter;
-import br.com.postech.software.architecture.techchallenge.configuration.InteiroParaStatusPedidoConverter;
-import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
-import br.com.postech.software.architecture.techchallenge.exception.BusinessException;
-import br.com.postech.software.architecture.techchallenge.exception.NotFoundException;
-import br.com.postech.software.architecture.techchallenge.model.Pedido;
-import br.com.postech.software.architecture.techchallenge.repository.jpa.PedidoJpaRepository;
-import br.com.postech.software.architecture.techchallenge.service.PedidoService;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -33,10 +33,15 @@ public class PedidoServiceImpl implements PedidoService {
 	private final PedidoJpaRepository pedidoJpaRepository;
 	private ClienteConnector clienteConnector;
 	private ProdutoConnector produtoConnector;
+	private ProducaoConnector producaoConnector;
 
     protected PedidoJpaRepository getPersistencia() {
 		return pedidoJpaRepository;
 	}
+
+	private Pedido save(Pedido pedido) {
+		return getPersistencia().save(pedido);
+    }
 
 	@Override
 	public List<PedidoDTO> findTodosPedidosAtivos()throws BusinessException{
@@ -57,13 +62,28 @@ public class PedidoServiceImpl implements PedidoService {
 		return MAPPER.map(pedidos, new TypeToken<List<PedidoDTO>>() {}.getType());
 	}
 
+	public Pedido findById(Integer id) throws BusinessException {
+		return getPersistencia()
+				.findById(id)
+				.orElseThrow(() -> new NotFoundException("Pedido não encontrado!"));
+	}
+
 	@Override
-	public PedidoDTO findById(Integer id) throws BusinessException{
+	public PedidoDTO getDtoById(Integer id) throws BusinessException{
 		Pedido pedido = getPersistencia()
 				.findById(id)
 				.orElseThrow(() -> new NotFoundException("Pedido não encontrado!"));
 
 		return MAPPER.map(pedido, PedidoDTO.class);
+	}
+
+	@Override
+	public PedidoDTO updateStatus(Integer id, String status) throws Exception {
+		Pedido pedido = findById(id);
+		pedido.updateStatus(status);
+		PedidoDTO pedidoDTO = MAPPER.map(save(pedido), PedidoDTO.class);
+		producaoConnector.salvarPedidoBaseLeitura(pedidoDTO);
+		return pedidoDTO;
 	}
 
 	@Override
@@ -93,8 +113,7 @@ public class PedidoServiceImpl implements PedidoService {
 			throw new Exception(validaProdutoResponseDTO.getErrorMessage());
 		}
 
-		//Salva o pedido e obtem seu numero
-		pedido = getPersistencia().save(pedido);
+		pedido = save(pedido);
 
 		MAPPER.typeMap(Pedido.class, PedidoDTO.class)
 				.addMappings(mapperA -> mapperA
@@ -104,6 +123,7 @@ public class PedidoServiceImpl implements PedidoService {
 					mapper.map(src -> src.getId(),PedidoDTO::setNumeroPedido);
 				});
 
+		producaoConnector.salvarPedidoBaseLeitura(pedidoDTO);
 		return pedidoDTO;
 	}
 }

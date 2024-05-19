@@ -1,9 +1,9 @@
 package br.com.postech.software.architecture.techchallenge.dto;
 
-import java.util.List;
-
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class PedidoDTO {
@@ -14,5 +14,4 @@ public class PedidoDTO {
     private Integer statusPedido;
     @NotEmpty
     private List<PedidoProdutoDTO> produtos;
-
 }

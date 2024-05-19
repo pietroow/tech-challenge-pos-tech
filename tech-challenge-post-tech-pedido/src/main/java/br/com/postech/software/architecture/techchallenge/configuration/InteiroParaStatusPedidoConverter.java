@@ -1,8 +1,7 @@
 package br.com.postech.software.architecture.techchallenge.configuration;
 
-import org.modelmapper.AbstractConverter;
-
 import br.com.postech.software.architecture.techchallenge.enums.StatusPedidoEnum;
+import org.modelmapper.AbstractConverter;
 
 public class InteiroParaStatusPedidoConverter extends AbstractConverter<Integer, StatusPedidoEnum> {
 

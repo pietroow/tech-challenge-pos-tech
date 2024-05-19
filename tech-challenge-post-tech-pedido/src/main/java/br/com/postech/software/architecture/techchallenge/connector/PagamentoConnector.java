@@ -1,7 +1,5 @@
 package br.com.postech.software.architecture.techchallenge.connector;
 
-import br.com.postech.software.architecture.techchallenge.dto.MercadoPagoQrCodeRequestDTO;
-import br.com.postech.software.architecture.techchallenge.dto.MercadoPagoQrCodeResponseDTO;
 import br.com.postech.software.architecture.techchallenge.dto.PedidoDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;

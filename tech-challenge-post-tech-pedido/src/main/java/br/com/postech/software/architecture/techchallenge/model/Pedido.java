@@ -29,9 +29,8 @@ public class Pedido implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id")
-    private Cliente cliente;
+    @Column(name = "cliente_id")
+    private Long clienteId;
 
     @Column(name = "data_pedido", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private LocalDateTime dataPedido;
@@ -44,4 +43,7 @@ public class Pedido implements Serializable {
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PedidoProduto> produtos = new ArrayList<>();
 
+    public void updateStatus(String status) {
+        this.statusPedido = StatusPedidoEnum.valueOf(status);
+    }
 }

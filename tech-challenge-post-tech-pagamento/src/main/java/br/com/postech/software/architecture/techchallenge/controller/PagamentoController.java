@@ -29,10 +29,4 @@ public class PagamentoController {
         pagamentoService.updatePaymentStatus(mercadoPagoId);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    /*
-     * 1. Recebe notificação com o id do pagamento
-     * 2. Retorna status 200 para avisar que recebeu
-     * 3. Acessar endpoint com informações sobre pagamento
-     * 4. Atualizar entidade pagamento
-     */
 }

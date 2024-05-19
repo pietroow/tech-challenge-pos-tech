@@ -1,5 +1,13 @@
 package br.com.postech.software.architecture.techchallenge.enums;
 
+import br.com.postech.software.architecture.techchallenge.util.Constantes;
+import org.apache.commons.lang3.StringUtils;
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.usertype.ParameterizedType;
+import org.hibernate.usertype.UserType;
+import org.springframework.util.ObjectUtils;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -8,15 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Properties;
-
-import org.apache.commons.lang3.StringUtils;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.usertype.ParameterizedType;
-import org.hibernate.usertype.UserType;
-import org.springframework.util.ObjectUtils;
-
-import br.com.postech.software.architecture.techchallenge.util.Constantes;
 
 public class AssociacaoType implements UserType<Object>, ParameterizedType {
 	private Class<?> enumClass;
