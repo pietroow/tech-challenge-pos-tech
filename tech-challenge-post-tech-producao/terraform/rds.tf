@@ -34,10 +34,10 @@ resource "aws_db_subnet_group" "rds_subnet_group" {
 
 resource "aws_db_instance" "default" {
   allocated_storage = 10
-  db_name           = "postgres"
-  engine            = "postgres"
+  db_name           = "mongo"
+  engine            = "mongo"
   instance_class    = "db.t3.micro"
-  username          = "postgres"
+  username          = "mongo"
   password          = "password"
 
   multi_az            = false

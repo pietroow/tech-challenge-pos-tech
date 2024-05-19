@@ -1,41 +1,29 @@
 package br.com.postech.software.architecture.techchallenge.producao.model;
 
-import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.type.TrueFalseConverter;
+import org.hibernate.validator.constraints.br.CPF;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
-
-@Entity
-@Table(name = "cliente")
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-public class Cliente implements Serializable{
-	private static final long serialVersionUID = 1L;
+@NoArgsConstructor
+public class Cliente {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	@Column(nullable = true, length = 255)
 	private String nome;
-
-	@Column(nullable = true, unique = true, length = 14)
-	private String cpf;
-
-	@Column(nullable = true, length = 255)
+	@Email(message = "Email inválido, digite novamente", regexp = ".+[@].+[\\.].+")
 	private String email;
-
-	@Column(nullable = true,length = 255)
+	@CPF(message="CPF inválido, digite novamente")
+	private String cpf;
+	@Size(min = 6, max = 20)
+	@NotNull
 	private String senha;
-
-	@Convert(converter = TrueFalseConverter.class)
-	@Column(nullable = false)
-	private boolean status;
-
+	private Boolean status;
 }

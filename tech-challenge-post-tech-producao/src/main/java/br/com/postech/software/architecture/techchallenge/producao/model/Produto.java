@@ -1,52 +1,35 @@
 package br.com.postech.software.architecture.techchallenge.producao.model;
 
 import br.com.postech.software.architecture.techchallenge.producao.enums.CategoriaEnum;
-import br.com.postech.software.architecture.techchallenge.producao.enums.AssociacaoType;
-import br.com.postech.software.architecture.techchallenge.producao.util.Constantes;
-import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "produto")
+
 @Data
-@NoArgsConstructor
+@Builder
 @AllArgsConstructor
-@EqualsAndHashCode
-public class Produto implements Serializable {
-    private static final long serialVersionUID = 1L;
+@NoArgsConstructor
+public class Produto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(nullable = false, length = 100)
+    @NotNull
     private String nome;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal valor;
-
-    @Column(nullable = false, length = 500)
-    private String descricao;
-
-    @Type(value = AssociacaoType.class,
-            parameters = {@Parameter(name = Constantes.ENUM_CLASS_NAME, value = "CategoriaEnum")})
-    @Column(name = "categoria_id")
+    @NotNull
     private CategoriaEnum categoria;
-
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProdutoImages> imagens;
-
-    @OneToMany(mappedBy = "produto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<PedidoProduto> pedidos = new ArrayList<>();
-
+    @NotNull
+    @Min(1)
+    private BigDecimal valor;
+    @NotNull
+    private String descricao;
+    @NotEmpty
+    private List<ProdutoImagens> imagens;
 }

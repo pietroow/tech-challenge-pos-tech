@@ -7,8 +7,7 @@ import br.com.postech.software.architecture.techchallenge.producao.dto.ProducaoU
 import br.com.postech.software.architecture.techchallenge.producao.enums.StatusPedidoEnum;
 import br.com.postech.software.architecture.techchallenge.producao.exception.BusinessException;
 import br.com.postech.software.architecture.techchallenge.producao.exception.NotFoundException;
-import br.com.postech.software.architecture.techchallenge.producao.model.Pedido;
-import br.com.postech.software.architecture.techchallenge.producao.repository.jpa.PedidoJpaRepository;
+import br.com.postech.software.architecture.techchallenge.producao.repository.PedidoJpaRepository;
 import br.com.postech.software.architecture.techchallenge.producao.service.PedidoService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
