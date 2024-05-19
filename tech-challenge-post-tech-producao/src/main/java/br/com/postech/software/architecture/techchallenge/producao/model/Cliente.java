@@ -26,4 +26,11 @@ public class Cliente {
 	@NotNull
 	private String senha;
 	private Boolean status;
+
+	public void update(Cliente cliente) {
+		this.nome = cliente.getNome();
+		this.email = cliente.getEmail();
+		this.cpf = cliente.getCpf();
+		this.status = cliente.getStatus();
+	}
 }
