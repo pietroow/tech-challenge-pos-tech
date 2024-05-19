@@ -29,7 +29,7 @@ public class ProducaoController {
         return new ResponseEntity<>(producaoService.findByNumeroPedido(idPedido), HttpStatus.OK);
     }
     @PostMapping(produces = MediaType.APPLICATION_JSON)
-    public ResponseEntity<PedidoProducao> salvaPedido(@RequestBody PedidoProducao producaoUpdateDTO) throws Exception {
-        return new ResponseEntity<>(producaoService.salvaPedido(producaoUpdateDTO), HttpStatus.OK);
+    public ResponseEntity<PedidoProducao> salvaPedido(@RequestBody PedidoProducao pedidoProducao) throws Exception {
+        return new ResponseEntity<>(producaoService.salvaPedido(pedidoProducao), HttpStatus.OK);
     }
 }
